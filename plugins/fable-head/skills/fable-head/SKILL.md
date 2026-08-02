@@ -21,10 +21,18 @@ so and show the diff summary instead; the user decides.
      Cowork project's Instructions instead.)
    - Agents: this plugin already ships `fable-head:finder` /
      `fable-head:verifier` / `fable-head:synthesizer` with model+effort
-     pinned (opus/high, opus/xhigh, fable/xhigh) — nothing to install.
-     Offer the user-level copies (`resources/{finder,verifier,synthesizer}.md`
-     → `~/.claude/agents/`) only if the user wants un-namespaced names; note
-     that user-level agents OVERRIDE same-named plugin agents.
+     pinned (opus/high, opus/xhigh, fable/xhigh) — nothing to install, and
+     they auto-update with the plugin. If same-named USER-LEVEL copies exist
+     (`~/.claude/agents/{finder,verifier,synthesizer}.md`), warn that they
+     OVERRIDE the plugin's when invoked un-namespaced and will go stale as
+     the plugin updates; offer to remove them (with the user's confirmation)
+     so the plugin stays canonical. Only offer to INSTALL user-level copies
+     if the user explicitly wants un-namespaced names and accepts the sync
+     duty.
+   - In Cowork specifically: also offer the paste-ready doctrine block
+     (`resources/cowork-instructions.md`) and tell the user to paste it into
+     the Cowork project's Instructions — that is the only way it survives
+     into their next Cowork session.
 
 2. **Session defaults**: read `~/.claude/settings.json`. Confirm `model` is a
    Fable id and `effortLevel` is `xhigh`. If either is missing, tell the user

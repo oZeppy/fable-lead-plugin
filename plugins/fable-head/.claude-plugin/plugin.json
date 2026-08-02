@@ -1,9 +1,18 @@
 {
   "name": "fable-head",
   "displayName": "Fable Head",
-  "version": "1.0.0",
-  "description": "A Fable-headed working system: deliberate model/effort allocation (Fable head, Opus bulk), refuter-style verification, measured-numbers discipline, and per-project scaffolding — bootstrapped with one command.",
-  "author": { "name": "Ethan Burstein", "url": "https://github.com/oZeppy" },
+  "version": "1.1.0",
+  "description": "A Fable-headed working system: deliberate model/effort allocation (Fable head, Opus bulk), refuter-style verification, measured-numbers discipline, and per-project scaffolding \u2014 bootstrapped with one command.",
+  "author": {
+    "name": "Ethan Burstein",
+    "url": "https://github.com/oZeppy"
+  },
   "license": "MIT",
-  "keywords": ["orchestration", "verification", "agents", "workflow", "fable"]
+  "keywords": [
+    "orchestration",
+    "verification",
+    "agents",
+    "workflow",
+    "fable"
+  ]
 }

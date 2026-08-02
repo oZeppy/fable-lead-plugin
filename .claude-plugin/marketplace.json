@@ -1,13 +1,13 @@
 {
-  "name": "fable-head",
-  "description": "The Fable-headed working system: pinned model/effort agents, refuter verification, measured-numbers discipline, one-command bootstrap.",
+  "name": "fable-lead",
+  "description": "The Fable-led working system: pinned model/effort agents, refuter verification, measured-numbers discipline, one-command bootstrap.",
   "owner": { "name": "Ethan Burstein", "url": "https://github.com/oZeppy" },
   "metadata": { "pluginRoot": "./plugins" },
   "plugins": [
     {
-      "name": "fable-head",
-      "source": "./plugins/fable-head",
-      "description": "Bootstrap a Fable-headed working system into any session: pinned finder/verifier/synthesizer agents, refuter-verification doctrine, measured-numbers discipline, project scaffolding.",
+      "name": "fable-lead",
+      "source": "./plugins/fable-lead",
+      "description": "Bootstrap a Fable-led working system into any session: pinned finder/verifier/synthesizer agents, refuter-verification doctrine, measured-numbers discipline, project scaffolding.",
       "category": "workflow",
       "tags": ["orchestration", "verification", "agents"]
     }

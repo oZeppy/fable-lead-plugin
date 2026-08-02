@@ -1,7 +1,7 @@
 ---
-name: fable-head
+name: fable-lead
 description: >
-  Bootstrap the Fable-headed working system into the current session and
+  Bootstrap the Fable-led working system into the current session and
   project: verify/install the global working-system files (user CLAUDE.md +
   finder/verifier/synthesizer agents), scaffold the project's CLAUDE.md and
   PROJECT_MEMORY if absent, confirm model/effort defaults, and report status.
@@ -9,7 +9,7 @@ description: >
   system is active.
 ---
 
-You are activating the Fable-headed working system. Resources are bundled in
+You are activating the Fable-led working system. Resources are bundled in
 this skill's `resources/` directory. Do each step, then report one compact
 status block. Never overwrite a file that already exists and differs — say
 so and show the diff summary instead; the user decides.
@@ -19,8 +19,8 @@ so and show the diff summary instead; the user decides.
      If present but different, report the drift; do not clobber. (In Cowork,
      `~/.claude` is not read: tell the user to paste the doctrine into the
      Cowork project's Instructions instead.)
-   - Agents: this plugin already ships `fable-head:finder` /
-     `fable-head:verifier` / `fable-head:synthesizer` with model+effort
+   - Agents: this plugin already ships `fable-lead:finder` /
+     `fable-lead:verifier` / `fable-lead:synthesizer` with model+effort
      pinned (opus/high, opus/xhigh, fable/xhigh) — nothing to install, and
      they auto-update with the plugin. If same-named USER-LEVEL copies exist
      (`~/.claude/agents/{finder,verifier,synthesizer}.md`), warn that they
@@ -64,6 +64,6 @@ so and show the diff summary instead; the user decides.
    continue with whatever the user actually asked.
 
 To carry this system to another machine or person: install the plugin
-(`/plugin marketplace add oZeppy/fable-head-plugin`, then
-`/plugin install fable-head@fable-head`; in Cowork: Customize → Plugins →
-Add marketplace) and invoke `/fable-head` — step 1 installs the rest.
+(`/plugin marketplace add oZeppy/fable-lead-plugin`, then
+`/plugin install fable-lead@fable-lead`; in Cowork: Customize → Plugins →
+Add marketplace) and invoke `/fable-lead` — step 1 installs the rest.

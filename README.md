@@ -1,22 +1,22 @@
-# Fable Head — a working system for Claude Code and Cowork
+# Fable Lead — a working system for Claude Code and Cowork
 
-A plugin that turns any Claude session into a **Fable-headed system**: the
+A plugin that turns any Claude session into a **Fable-led system**: the
 expensive, capable model runs the head; bulk work is delegated deliberately to
 pinned agents; verification means *refuting*, not checking; and every number
 carries the command that produced it.
 
 ## What you get
 
-- **`/fable-head`** (also `/fable-head:fable-head`) — one command that
+- **`/fable-lead`** (also `/fable-lead:fable-lead`) — one command that
   bootstraps the system into the current session and project: verifies the
   working-doctrine files, scaffolds a lean project `CLAUDE.md` and a
   Decisions/Corrections/Constraints memory file if the project has none, and
   adopts the doctrine for the session. Never overwrites anything that exists.
 - **Three agents with model + effort pinned** (used automatically when the
   head delegates):
-  - `fable-head:finder` — bulk search/measurement (Opus, high)
-  - `fable-head:verifier` — adversarial refutation (Opus, xhigh)
-  - `fable-head:synthesizer` — the one head-class agent whose output ships
+  - `fable-lead:finder` — bulk search/measurement (Opus, high)
+  - `fable-lead:verifier` — adversarial refutation (Opus, xhigh)
+  - `fable-lead:synthesizer` — the one head-class agent whose output ships
     verbatim (Fable, xhigh)
 - **The doctrine** (bundled, installable to `~/.claude/CLAUDE.md`): staleness
   checks before trusting any doc, evidence classes on every claim, n and CIs
@@ -25,11 +25,11 @@ carries the command that produced it.
 ## Install — Claude Code (CLI / desktop / web)
 
 ```
-/plugin marketplace add oZeppy/fable-head-plugin
-/plugin install fable-head@fable-head
+/plugin marketplace add oZeppy/fable-lead-plugin
+/plugin install fable-lead@fable-lead
 ```
 
-Then in any project: `/fable-head`
+Then in any project: `/fable-lead`
 
 Recommended session defaults (yours to set, the skill will remind you):
 save a Fable model default via `/model`, and add `"effortLevel": "xhigh"` to
@@ -38,13 +38,13 @@ save a Fable model default via `/model`, and add `"effortLevel": "xhigh"` to
 Try it without installing:
 
 ```
-claude --plugin-dir ./plugins/fable-head
+claude --plugin-dir ./plugins/fable-lead
 ```
 
 ## Install — Cowork
 
-**Customize → Plugins → Add marketplace** → enter `oZeppy/fable-head-plugin`
-→ install **fable-head**.
+**Customize → Plugins → Add marketplace** → enter `oZeppy/fable-lead-plugin`
+→ install **fable-lead**.
 
 Two Cowork caveats (from the official docs, current as of 2026-08):
 
@@ -65,9 +65,9 @@ install on folder trust:
 ```json
 {
   "extraKnownMarketplaces": {
-    "fable-head": { "source": { "source": "github", "repo": "oZeppy/fable-head-plugin" } }
+    "fable-lead": { "source": { "source": "github", "repo": "oZeppy/fable-lead-plugin" } }
   },
-  "enabledPlugins": { "fable-head@fable-head": true }
+  "enabledPlugins": { "fable-lead@fable-lead": true }
 }
 ```
 
@@ -85,3 +85,20 @@ install on folder trust:
   of what actually caught things.
 
 MIT licensed. Issues and PRs welcome.
+
+## Migrating from fable-head (≤ v1.1.0)
+
+The plugin, marketplace, and repo were renamed to **fable-lead** at v2.0.0.
+A rename is a new identity — updates will not flow to the old name. Once:
+
+```
+/plugin uninstall fable-head@fable-head
+/plugin marketplace remove fable-head
+/plugin marketplace add oZeppy/fable-lead-plugin
+/plugin install fable-lead@fable-lead
+```
+
+(Cowork: Customize → Plugins — remove the old plugin and marketplace, add the
+new marketplace, install fable-lead.) Old GitHub URLs redirect, so a stale
+marketplace keeps *working* — it just never sees new versions under the old
+plugin name.

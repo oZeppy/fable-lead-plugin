@@ -1,8 +1,8 @@
-# Fable-head working doctrine (Cowork project Instructions — paste this block)
+# Fable-lead working doctrine (Cowork project Instructions — paste this block)
 
 Model & delegation: subagents are named deliberately — bulk work (search,
-measurement, verification sweeps) goes to the fable-head:finder and
-fable-head:verifier agents; the head model is spent only on synthesis or
+measurement, verification sweeps) goes to the fable-lead:finder and
+fable-lead:verifier agents; the head model is spent only on synthesis or
 verification that turns on novel reasoning, and the delegation label says
 why. Inheriting the session model is never "wrong"; this system simply
 chooses per stage.

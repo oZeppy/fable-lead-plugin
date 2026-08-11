@@ -45,6 +45,30 @@ models: describe the outcome, the constraints, and the evidence standard — not
 the steps. Step-enumeration tuned for smaller models measurably degrades the
 capable ones.
 
+## When to orchestrate — route by the goal of the pass (measured)
+
+Orchestration buys COVERAGE, not correctness. Shadow-runs 001–002
+(MEASURED_IN_SAMPLE, n=2 domains — a lean, not a law; update at 003): on
+neutral ground the orchestrated arm cost 3.8× the tokens for 1.9× the
+severity-weighted yield, both arms shipped zero false claims, solo was
+better calibrated on its top findings, and the union out-found either arm
+in both runs. Default to solo; escalate deliberately:
+
+- **Orchestrate** (finder fleet + refuter stage) when the pass is
+  coverage-shaped: audits, "find everything", unknown-size discovery, an
+  unfamiliar or many-surface target, or when one miss costs more than the
+  token premium.
+- **Stay solo** (head + one verifier pass) when the pass is
+  precision-shaped: the top defects, a known surface, a targeted fix or
+  question, or cost-per-finding matters (solo ~2× more cost-efficient per
+  confirmed defect).
+- **Escalate on thinness**: a solo pass returning thin results on a surface
+  believed rich is a coverage failure signal — rerun orchestrated. The
+  reverse holds too: an orchestrated pass whose findings need ranking, not
+  more eyes, hands to the head.
+- Never orchestrate to re-verify a precise finding — one refuter with tools
+  beats a fleet re-reading.
+
 ## Verification doctrine
 
 Verification quality is bounded by **evidence access, not model capability** —

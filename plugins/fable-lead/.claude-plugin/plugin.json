@@ -1,7 +1,7 @@
 {
   "name": "fable-lead",
   "displayName": "Fable Lead",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A Fable-led working system: deliberate model/effort allocation (Fable head, Opus bulk), refuter-style verification, measured-numbers discipline, and per-project scaffolding \u2014 bootstrapped with one command.",
   "author": {
     "name": "Ethan Burstein",

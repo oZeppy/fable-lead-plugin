@@ -36,8 +36,15 @@ const chk  = (p, o = {}) => agent(p, { model: 'opus',  effort: 'xhigh', ...o })
 const lead = (p, o = {}) => agent(p, { model: 'fable', effort: 'xhigh', ...o })
 ```
 
-Before running: every `agent(` call goes through a wrapper or names a model.
-That grep is the entire enforcement mechanism.
+Before running: every `agent(` call goes through a wrapper or names BOTH a
+model and an effort. That grep is the entire enforcement mechanism. Effort
+inherits like model does: a session-level `/effort max` silently upgrades
+every unpinned subagent call (Workflow `agent()` without `effort`, Agent-tool
+calls, which have no effort field at all) to max — pin effort or use a
+wrapper, always. Vote splits escalate to `lead` at effort **max**
+(ESTIMATED — splits are ~1 per 50+ claims so the cost is nil; revisit at the
+next calibration). Name the config that RAN in every catch-ledger `--task`
+(e.g. "chk=opus/high") so per-config quality accumulates passively.
 
 Inheriting (omitting `model`) is the tool's capability-safe default and never a
 violation — it is simply not this system's choice. Prompting for capable

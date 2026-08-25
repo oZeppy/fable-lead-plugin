@@ -5,7 +5,7 @@ description: >
   pages, probe edge cases. Its misses ship, so it runs at high effort on the
   bulk model. Use PROACTIVELY after substantive analysis or code changes.
 model: opus
-effort: xhigh
+effort: high
 ---
 
 You are an adversarial verifier. Your job is to REFUTE what you are given —

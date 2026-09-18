@@ -57,7 +57,8 @@ model's errors independent across votes — not by "bulk vs head".
 | head | session model (`fable` today) | judgment, decisions, the owner | — |
 | `scout` | sonnet / medium | the head's reading delegate: locate, read, summarise | new in v3; low blast radius because the head re-reads the decisive lines |
 | `sub` (finder) | opus / high | bulk search, measurement, dataset building — recall matters and no verifier can restore a miss | MEASURED 2026-09-18 (Part B): sonnet/high returned a third as many findings (9 vs 26/run) and 1.0 vs 3.5 known defects/run at the SAME cost per finding — smaller, not cheaper. For coverage-critical passes fable/medium found the most (33/run, fastest) at 1.35× per finding, and a second run of the same tier beat a better single run (5+2 → 6 of 10) |
-| `build` (builder) | opus / high | delegated implementation: one scoped change, built and demonstrated | new in v3 — pins what `general-purpose` left to inheritance (48% of subagent quota ran unpinned, MEASURED 2026-09-18); Sonnet for builds is unmeasured |
+| `build` (builder) | opus / high | delegated implementation with no test that defines done | new in v3 — pins what `general-purpose` left to inheritance (48% of subagent quota ran unpinned at xhigh; MEASURED 2026-09-18: xhigh cost +19% quota for identical results) |
+| `buildT` (builder-tdd) | **sonnet / high** | delegated implementation where FAILING TESTS define done | MEASURED 2026-09-18 (Part C, 12 tasks × 4 arms, deterministic grading): 12/12 for every tier; sonnet −56% quota and −33% wall-clock vs opus/high. On trial to 2026-10-02. **Tests first is the contract that unlocks the cheap tier.** Fable/medium: same quota as opus, half the time, half the diff — for latency or minimal change |
 | `chk` (verifier) | **sonnet / high** | refutation; its misses ship | MEASURED 2026-09-18, on live trial to 2026-10-02 — tag the ledger `chk=sonnet-5/high` |
 | `lead` | fable / xhigh (synthesis), max (vote splits) | synthesis that ships verbatim; verification that turns on novel reasoning; split escalation | unchanged — effort above high is unmeasured for these, and they are rare |
 | mechanical | sonnet / low | edits a test or compiler makes loud when wrong | — |
@@ -71,6 +72,7 @@ net; it was not cheaper than Sonnet either, 20.6 turns vs 8.2).
 const scout = (p, o = {}) => agent(p, { model: 'sonnet', effort: 'medium', ...o })
 const sub   = (p, o = {}) => agent(p, { model: 'opus',   effort: 'high',   ...o })
 const build = (p, o = {}) => agent(p, { model: 'opus',   effort: 'high',   ...o })
+const buildT = (p, o = {}) => agent(p, { model: 'sonnet', effort: 'high',  ...o })  // failing tests define done
 const chk   = (p, o = {}) => agent(p, { model: 'sonnet', effort: 'high',   ...o })
 const lead  = (p, o = {}) => agent(p, { model: 'fable',  effort: 'xhigh',  ...o })
 ```
@@ -85,7 +87,11 @@ CEILING: three arms were perfect, so this set cannot rank them (Wilson lower
 bound 89%) — harder boundary claims are owed before the trial ends. Part B
 (finder tier, same day, 20 finders + 39 refuters): precision was ~97% for every
 tier on a severity-ranked sample, so tiers differ at the finder role in YIELD
-and RECALL — what no verifier can add back — and not at the verifier role. Extra
+and RECALL — what no verifier can add back — and not at the verifier role. Part C
+(builder tier, 48 builds graded by script): every tier solved 12/12 test-driven
+fixes, so where a deterministic check defines done the cheap tier suffices. The
+pattern across A/B/C: tier matters exactly where nothing downstream can restore
+a miss (discovery), and not where a check — a refuter, a test — stands behind it. Extra
 rigor comes from VOTES, not effort: ship-critical claims get TWO independent
 `chk` votes; a v1≠v2 split escalates to `lead` at effort max (003:
 disagreement flagged 2/2 errors; agreement was 46/46 correct; wrong verdicts
@@ -101,7 +107,7 @@ trusting it. That is how v2 went out of date.
 Before running: every `agent(` call goes through a wrapper or names BOTH a
 model and an effort. That grep is the entire enforcement mechanism. Agent-tool
 calls have no effort field — use the plugin's agent types (`fable-lead:scout`
-/ `finder` / `builder` / `verifier` / `synthesizer`), which pin both; never
+/ `finder` / `builder` / `builder-tdd` / `verifier` / `synthesizer`), which pin both; never
 `general-purpose` for real work — it inherits the session's model default AND
 its effort. `fable-lead-calibration` reports what actually served each role. Name the config that
 RAN in every catch-ledger `--task` so per-config quality accumulates passively.

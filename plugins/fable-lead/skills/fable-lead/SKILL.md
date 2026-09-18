@@ -54,6 +54,12 @@ so and show the diff summary instead; the user decides.
      no invented constraints.
    - If no `docs/PROJECT_MEMORY.md`: create it from
      `resources/project-MEMORY-skeleton.md`.
+   - If no `.claude/workflows/verify-claims.js`: install it from
+     `resources/verify-claims.js` (the executable verification procedure —
+     evidence check, two refuter votes, adjudication on splits). The Workflow
+     tool only runs scripts under the working directory, which is why each
+     project carries its own copy; if one exists and differs from the
+     resource, report the drift rather than overwriting.
    - Do NOT create a campaign log preemptively — logs start with the first
      milestone, per the system's own "state goes stale" rule.
 
@@ -68,6 +74,11 @@ so and show the diff summary instead; the user decides.
    n; suites/exit codes before commits; confirm-you-are-in-the-present before
    trusting any doc. If a transcript shows a role served by a model id the
    role table was not calibrated against, say so — the table is stale.
+
+   Tools the doctrine relies on, if present on this machine (report which are
+   missing; they live in `~/.local/bin`, mirrored in the owner's ops repo):
+   `catch-ledger`, `claim-check`, `fable-lead-lint`, `fable-lead-calibration`,
+   `fable-lead-headroom`.
 
 5. **Report**: one block — what was installed vs already present vs drifted,
    the model/effort status, what was scaffolded, and (if in a repo) the one

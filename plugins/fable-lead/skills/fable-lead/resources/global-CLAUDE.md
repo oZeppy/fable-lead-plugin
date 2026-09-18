@@ -25,8 +25,8 @@ claim about the past — glob for the latest, never trust a hardcoded name.
 
 ## What costs quota — optimise this, not the price list
 
-MEASURED_IN_SAMPLE (2026-09-18; 14+6 meter runs over three weeks, two
-independent refuters): the plan's 5h/7d/Fable meters do not charge cache reads
+MEASURED_IN_SAMPLE (14+6 meter runs, 2026-08-29→09-18, two independent
+refuters): the plan's 5h/7d/Fable meters do not charge cache reads
 at list price — a free cache-read weight is indistinguishable from 0 and 5–6σ
 from list. Identified on Opus traffic; Fable 5.1 untested. So what costs quota
 is tokens WRITTEN: uncached input, cache writes, output. ESTIMATED from list
@@ -54,8 +54,9 @@ mostly ingestion; spawn preamble ≈ 8% of subagent quota.
 ## Roles (calibrated 2026-09-18 on claude-fable-5-1, claude-opus-5, claude-sonnet-5, claude-haiku-4-5)
 
 Subagents are **named deliberately**, never inherited: an agent without a
-pinned effort runs at the session's (MEASURED: 19 of 24 `general-purpose`
-builders ran at `max` that way — 48% of a week's subagent quota). Tier by two
+pinned effort runs at the session's (MEASURED 2026-09-18 over the prior 7
+days: 24 `general-purpose` builders were 48% of subagent quota, 19 of them at
+`max`). Tier by two
 questions: can anything downstream restore this role's miss, and are this
 model's errors independent across votes.
 
@@ -93,7 +94,8 @@ are independent. Confidence is not a signal; disagreement is.
 
 **Enforcement, such as it is.** Workflow scripts: `fable-lead-lint SCRIPT.js`
 fails any `agent()` that does not pin model AND effort (MEASURED: 492 unpinned
-calls across 294 scripts on this machine before it existed). Agent-tool calls
+calls across 294 scripts on this machine, 75 of them in a built-in skill's
+template rather than head-authored). Agent-tool calls
 have no effort field, so use the agent types above and never
 `general-purpose` for real work; `fable-lead-calibration` reports after the
 fact which model and effort actually served each role and flags unpinned use.
@@ -112,7 +114,8 @@ the outcome, the constraints and the evidence standard, not the steps.
 
 Orchestration buys COVERAGE, not correctness (shadow-runs 001–002,
 MEASURED_IN_SAMPLE, n=2 domains: 3.8× the tokens for 1.9× the severity-weighted
-yield; zero false claims shipped by either arm; the union out-found both).
+yield; false claims: one, from the solo arm in run 001; the union out-found
+both).
 Default to solo — head, scouts, one verification pass — and escalate
 deliberately:
 
@@ -122,6 +125,9 @@ deliberately:
 - **Escalate on thinness**: thin results on a surface believed rich is a
   coverage failure — rerun orchestrated. The reverse holds: findings that need
   ranking, not more eyes, go to the head.
+- **Ship-critical coverage: run the finder stage twice and take the union.**
+  Run-to-run variance is large (Part B: 5 and 2 of 10 known defects alone, 6
+  together) — a second run of the same tier beats a better single run.
 - Never orchestrate to re-verify one precise finding — one refuter with tools
   beats a fleet re-reading.
 - **Route by quota**: run `fable-lead-headroom` before a fleet. TIGHT (active
@@ -138,12 +144,15 @@ real catches come from re-deriving, not re-reading.
   re-runs machine-checkable evidence with no model (a prototype: head-invoked,
   not yet for unattended use); (2) refuters with tools — "try to refute this;
   if it does not reproduce, drop it"; (3) the adjudicator, on splits only. The
-  procedure is executable: the `verify-claims` workflow (the `/fable-lead`
-  bootstrap installs it at `.claude/workflows/verify-claims.js`; the Workflow
-  tool only runs scripts under the working directory) returns verdicts and the
-  ledger command. Ship-critical claims get two independent votes.
+  procedure is executable: run the Workflow tool with scriptPath
+  `~/Documents/fable-lead-plugin/plugins/fable-lead/skills/fable-lead/resources/verify-claims.js`
+  (readable in every session via `permissions.additionalDirectories`; if a
+  session refuses the path, `/fable-lead` installs a project copy under
+  `.claude/workflows/`). It returns verdicts and the ledger command.
+  Ship-critical claims get two independent votes.
 - "Applies clean and tests pass" is not a review: 3 of 21 third-party changes
-  with green tests failed an adversarial read (2026-09-18). Third-party code
+  with green tests failed an adversarial read (the cswap-fork pick review,
+  2026-09-18: `~/cswap-fork/FORK.md` and its catch-ledger entry). Third-party code
   headed for a credential path, a daemon or anything unattended gets that read.
 - **Claim phrasing decides boundary verdicts**: state PRESENT defects as
   present, LATENT hazards as hazards, and keep a premise separate from its

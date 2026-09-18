@@ -36,6 +36,14 @@ scout's write), and it was 44% of all quota, three quarters of that ingestion
   conclusion (≤ ~400 words) and the path of the full report.
 - Spawning is cheap (spawn preamble ≈ 8% of subagent quota, MEASURED); do
   not merge unrelated tasks into one long agent to "save" on it.
+- **Shell output is the single largest thing any agent ingests** — 54% of all
+  intake (58% for subagents, 35% for the head; MEASURED 2026-09-18, 103,681
+  results), and it is concentrated: 12.5% of results carry half the
+  characters. Agents talking to each other is a few percent; this is the
+  bloat. Write commands that print little — counts, exit codes, `tail`, a
+  targeted `grep` — and send the rest to a file you can query. Capping results
+  at 4,000 characters would remove a quarter of all shell intake; at 2,000,
+  nearly half. Applies to every role, scouts and builders included.
 
 ## Roles and allocation (calibrated 2026-09-18 against claude-fable-5-1, claude-opus-5, claude-sonnet-5, claude-haiku-4-5)
 

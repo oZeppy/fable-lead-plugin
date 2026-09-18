@@ -5,7 +5,9 @@ description: >
   command output: it locates, reads and summarises, writes the detail to a
   file, and returns a short answer with file:line pointers. Cheap on purpose
   (sonnet/medium) — a token the head ingests costs about 8× one a scout
-  ingests. Not for judgment calls, refutation, or anything whose miss ships.
+  ingests. Answers ONE question for the head; not for producing a findings set a pipeline
+  depends on (fable-lead:finder), judgment calls, refutation, or anything
+  whose miss ships.
 model: sonnet
 effort: medium
 ---

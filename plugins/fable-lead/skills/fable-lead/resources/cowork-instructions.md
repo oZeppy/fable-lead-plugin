@@ -11,6 +11,21 @@ why. The smallest model tier never holds a role whose miss ships — its errors
 agree with each other, which defeats vote-splitting. Inheriting the session
 model is never "wrong"; this system simply chooses per stage.
 
+Builds: delegated implementation goes to fable-lead:builder, or to
+fable-lead:builder-tdd when failing tests already define "done" — writing the
+tests first is what lets the cheaper tier do the build. Two verifier votes that
+disagree go to fable-lead:adjudicator, and nowhere else is the head-class model
+spent at maximum effort.
+
+Output discipline: tool output is most of what any agent ingests. Write
+commands that print little (counts, exit codes, a tail, a targeted grep) and
+send the rest to a file you can query.
+
+Solo or orchestrated: orchestration buys coverage, not correctness. Default to
+working solo with one verification pass; fan out finders plus refuters only
+when the pass is coverage-shaped (audits, "find everything", unfamiliar
+surfaces). Never fan out to re-verify one precise finding.
+
 Verification: verifiers REFUTE, they don't check — "if it does not reproduce,
 drop it." Every claim carries an evidence class (MEASURED_OOS /
 MEASURED_IN_SAMPLE / CITED / ESTIMATED / SPECULATIVE); in-sample results

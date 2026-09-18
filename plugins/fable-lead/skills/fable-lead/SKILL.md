@@ -3,7 +3,7 @@ name: fable-lead
 description: >
   Bootstrap the Fable-led working system into the current session and
   project: verify/install the global working-system files (user CLAUDE.md +
-  scout/finder/builder/verifier/synthesizer agents), scaffold the project's CLAUDE.md and
+  scout/finder/builder/builder-tdd/verifier/adjudicator/synthesizer agents), scaffold the project's CLAUDE.md and
   PROJECT_MEMORY if absent, confirm model/effort defaults, and report status.
   Invoke in any new project, on any new machine, or whenever unsure the
   system is active.
@@ -20,11 +20,13 @@ so and show the diff summary instead; the user decides.
      `~/.claude` is not read: tell the user to paste the doctrine into the
      Cowork project's Instructions instead.)
    - Agents: this plugin already ships `fable-lead:scout` /
-     `fable-lead:finder` / `fable-lead:builder` / `fable-lead:verifier` /
+     `fable-lead:finder` / `fable-lead:builder` / `fable-lead:builder-tdd` /
+     `fable-lead:verifier` / `fable-lead:adjudicator` /
      `fable-lead:synthesizer` with model+effort pinned (sonnet/medium,
-     opus/high, opus/high, sonnet/high, fable/xhigh — calibrated 2026-09-18, see the role table) — nothing to install, and
-     they auto-update with the plugin. If same-named USER-LEVEL copies exist
-     (`~/.claude/agents/{scout,finder,builder,verifier,synthesizer}.md`), warn that they
+     opus/high, opus/high, sonnet/high, sonnet/high, fable/max, fable/xhigh — calibrated 2026-09-18, see the role table) — nothing to install. They update when
+     the plugin's local source (`~/Documents/fable-lead-plugin`) is updated and
+     the marketplace is refreshed; nothing is fetched from a remote. If same-named USER-LEVEL copies exist
+     (`~/.claude/agents/{scout,finder,builder,builder-tdd,verifier,adjudicator,synthesizer}.md`), warn that they
      OVERRIDE the plugin's when invoked un-namespaced and will go stale as
      the plugin updates; offer to remove them (with the user's confirmation)
      so the plugin stays canonical. Only offer to INSTALL user-level copies
@@ -35,11 +37,14 @@ so and show the diff summary instead; the user decides.
      the Cowork project's Instructions — that is the only way it survives
      into their next Cowork session.
 
-2. **Session defaults**: read `~/.claude/settings.json`. Confirm `model` is a
-   Fable id and `effortLevel` is `xhigh`. If either is missing, tell the user
-   the exact one-line fix (`/model` to save a default; add
-   `"effortLevel": "xhigh"` to settings.json) — settings are the user's; do
-   not edit them silently.
+2. **Session defaults**: read `~/.claude/settings.json` and REPORT `model` and
+   `effortLevel`; do not mandate either. The head's effort is the owner's
+   choice and is unmeasured. What is measured: every agent WITHOUT a pinned
+   effort inherits the session's (24 `general-purpose` builders ran at `max`
+   that way, 48% of a week's subagent quota), and effort above `high` bought
+   nothing on verification or test-driven builds. So the check that matters is
+   step 4's — real work goes to the pinned agent types. Settings are the
+   user's; never edit them silently.
 
 3. **Project scaffolding** (only inside a project directory; skip cleanly if
    the cwd is not a git repo and say so):
@@ -70,6 +75,8 @@ so and show the diff summary instead; the user decides.
    continue with whatever the user actually asked.
 
 To carry this system to another machine or person: install the plugin
-(`/plugin marketplace add oZeppy/fable-lead-plugin`, then
+(copy `~/Documents/fable-lead-plugin` — it is a local, unpushed repo by the
+owner's choice, mirrored in the private ops repo — then
+`/plugin marketplace add <that directory>` and
 `/plugin install fable-lead@fable-lead`; in Cowork: Customize → Plugins →
 Add marketplace) and invoke `/fable-lead` — step 1 installs the rest.

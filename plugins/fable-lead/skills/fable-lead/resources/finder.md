@@ -1,8 +1,12 @@
 ---
 description: >
-  Measurement and search agent for bulk work: sweep files, build datasets,
-  measure rates, map code paths, harvest sources. Its misses are caught by a
-  verifier downstream, so it runs the bulk model at standard-high effort.
+  Coverage agent for a pipeline: sweep a surface and RETURN A SET — findings,
+  a dataset, measured rates, a map of code paths, harvested sources — that
+  later stages will verify, rank or build on. A verifier downstream catches
+  its FALSE claims but nothing can restore what it MISSES, so it runs the
+  tier measured to have the recall (opus/high; sonnet found a third as much).
+  For coverage-critical passes run it twice and take the union. Not for
+  answering one question for the head — that is fable-lead:scout.
 model: opus
 effort: high
 ---

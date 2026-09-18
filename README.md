@@ -12,7 +12,7 @@ carries the command that produced it.
   working-doctrine files, scaffolds a lean project `CLAUDE.md` and a
   Decisions/Corrections/Constraints memory file if the project has none, and
   adopts the doctrine for the session. Never overwrites anything that exists.
-- **Six agents with model + effort pinned** (calibrated 2026-09-18 against
+- **Seven agents with model + effort pinned** (calibrated 2026-09-18 against
   Fable 5.1 / Opus 5 / Sonnet 5; used automatically when the head delegates):
   - `fable-lead:scout` — the head's reading delegate: locate, read, summarise
     to a file, return pointers (Sonnet, medium)
@@ -24,6 +24,7 @@ carries the command that produced it.
   - `fable-lead:verifier` — adversarial refutation, two votes on
     ship-critical claims (Sonnet, high — measured equal to Opus at a third of
     the quota)
+  - `fable-lead:adjudicator` — vote splits only (Fable, max)
   - `fable-lead:synthesizer` — the one head-class agent whose output ships
     verbatim (Fable, xhigh)
 - **The doctrine** (bundled, installable to `~/.claude/CLAUDE.md`): staleness
@@ -32,16 +33,28 @@ carries the command that produced it.
 
 ## Install — Claude Code (CLI / desktop / web)
 
+**v3 is local-only by the owner's choice.** The GitHub repo
+`oZeppy/fable-lead-plugin` still serves **v2.0.0** (three agents, the pre-Fable-5.1
+allocation) and installing from it gives you that. Install v3 from this
+directory:
+
 ```
-/plugin marketplace add oZeppy/fable-lead-plugin
+/plugin marketplace add ~/Documents/fable-lead-plugin
 /plugin install fable-lead@fable-lead
 ```
 
+On another machine: copy this directory (the private ops repo mirrors it under
+`plugin/`), then the same two commands with its path. Never
+`/plugin marketplace update` a marketplace that points at GitHub while v3 is
+unpushed — it would put v2 back.
+
 Then in any project: `/fable-lead`
 
-Recommended session defaults (yours to set, the skill will remind you):
-save a Fable model default via `/model`, and add `"effortLevel": "xhigh"` to
-`~/.claude/settings.json`.
+Session defaults are yours. What is measured: agents WITHOUT a pinned effort
+inherit the session's effort (a week of `general-purpose` builders ran at
+`max` that way), and effort above `high` bought nothing on verification or
+test-driven builds — so what matters is delegating to the pinned agent types,
+not the head's own setting.
 
 Try it without installing:
 
@@ -52,7 +65,9 @@ claude --plugin-dir ./plugins/fable-lead
 ## Install — Cowork
 
 **Customize → Plugins → Add marketplace** → enter `oZeppy/fable-lead-plugin`
-→ install **fable-lead**.
+→ install **fable-lead**. (That source is v2.0.0 until v3 is pushed; Cowork
+cannot read a local directory, so paste the v3 doctrine block from
+`resources/cowork-instructions.md` into the project's Instructions.)
 
 Two Cowork caveats (from the official docs, current as of 2026-08):
 

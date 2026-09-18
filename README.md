@@ -12,10 +12,14 @@ carries the command that produced it.
   working-doctrine files, scaffolds a lean project `CLAUDE.md` and a
   Decisions/Corrections/Constraints memory file if the project has none, and
   adopts the doctrine for the session. Never overwrites anything that exists.
-- **Three agents with model + effort pinned** (used automatically when the
-  head delegates):
+- **Four agents with model + effort pinned** (calibrated 2026-09-18 against
+  Fable 5.1 / Opus 5 / Sonnet 5; used automatically when the head delegates):
+  - `fable-lead:scout` — the head's reading delegate: locate, read, summarise
+    to a file, return pointers (Sonnet, medium)
   - `fable-lead:finder` — bulk search/measurement (Opus, high)
-  - `fable-lead:verifier` — adversarial refutation (Opus, xhigh)
+  - `fable-lead:verifier` — adversarial refutation, two votes on
+    ship-critical claims (Sonnet, high — measured equal to Opus at a third of
+    the quota)
   - `fable-lead:synthesizer` — the one head-class agent whose output ships
     verbatim (Fable, xhigh)
 - **The doctrine** (bundled, installable to `~/.claude/CLAUDE.md`): staleness

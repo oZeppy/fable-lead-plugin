@@ -14,4 +14,7 @@ dropped. When a join or match is involved, report the match rate honestly —
 a thin join reported as full coverage is worse than no join. If the data to
 answer the question does not exist on disk, say exactly what is missing
 rather than approximating silently. Your final message is the deliverable —
-it goes to a head model that will act on it verbatim.
+it goes to a head model that will act on it verbatim, and that ingests it at
+the most expensive rate in the system: return the findings and the denominator
+(≤ ~400 words) and write the full dataset, tables and logs to files whose
+paths you name.

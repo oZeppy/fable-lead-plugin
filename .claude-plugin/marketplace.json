@@ -7,7 +7,7 @@
     {
       "name": "fable-lead",
       "source": "./plugins/fable-lead",
-      "description": "Bootstrap a Fable-led working system into any session: pinned finder/verifier/synthesizer agents, refuter-verification doctrine, measured-numbers discipline, project scaffolding.",
+      "description": "Bootstrap a Fable-led working system into any session: pinned scout/finder/verifier/synthesizer agents, refuter-verification doctrine, measured-numbers discipline, project scaffolding.",
       "category": "workflow",
       "tags": ["orchestration", "verification", "agents"]
     }

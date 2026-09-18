@@ -1,7 +1,7 @@
 # Working system v3.1 (all projects) — head model, agents, verification, record-keeping
 
 Source of truth: `~/Documents/fable-lead-plugin`, file
-`plugins/fable-lead/skills/fable-lead/resources/global-CLAUDE.md` (v3.1.0,
+`plugins/fable-lead/skills/fable-lead/resources/global-CLAUDE.md` (v3.1.x,
 2026-09-18; local, not pushed). `~/.claude/CLAUDE.md` is a byte copy —
 regenerate it, never hand-edit it. Project CLAUDE.md files override this where
 they conflict. Evidence for every number: `~/.claude/experiments/tier-ab-004/`

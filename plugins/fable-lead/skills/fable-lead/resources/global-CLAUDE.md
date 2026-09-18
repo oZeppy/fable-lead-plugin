@@ -49,6 +49,7 @@ model's errors independent across votes — not by "bulk vs head".
 | head | session model (`fable` today) | judgment, decisions, the owner | — |
 | `scout` | sonnet / medium | the head's reading delegate: locate, read, summarise | new in v3; low blast radius because the head re-reads the decisive lines |
 | `sub` (finder) | opus / high | bulk search, measurement, dataset building — recall matters and no verifier can restore a miss | unchanged until tier-ab-004 Part B measures Sonnet's recall |
+| `build` (builder) | opus / high | delegated implementation: one scoped change, built and demonstrated | new in v3 — pins what `general-purpose` left to inheritance (48% of subagent quota ran unpinned, MEASURED 2026-09-18); Sonnet for builds is unmeasured |
 | `chk` (verifier) | **sonnet / high** | refutation; its misses ship | MEASURED 2026-09-18, on live trial to 2026-10-02 — tag the ledger `chk=sonnet-5/high` |
 | `lead` | fable / xhigh (synthesis), max (vote splits) | synthesis that ships verbatim; verification that turns on novel reasoning; split escalation | unchanged — effort above high is unmeasured for these, and they are rare |
 | mechanical | sonnet / low | edits a test or compiler makes loud when wrong | — |
@@ -61,6 +62,7 @@ net; it was not cheaper than Sonnet either, 20.6 turns vs 8.2).
 ```js
 const scout = (p, o = {}) => agent(p, { model: 'sonnet', effort: 'medium', ...o })
 const sub   = (p, o = {}) => agent(p, { model: 'opus',   effort: 'high',   ...o })
+const build = (p, o = {}) => agent(p, { model: 'opus',   effort: 'high',   ...o })
 const chk   = (p, o = {}) => agent(p, { model: 'sonnet', effort: 'high',   ...o })
 const lead  = (p, o = {}) => agent(p, { model: 'fable',  effort: 'xhigh',  ...o })
 ```
@@ -88,7 +90,9 @@ trusting it. That is how v2 went out of date.
 Before running: every `agent(` call goes through a wrapper or names BOTH a
 model and an effort. That grep is the entire enforcement mechanism. Agent-tool
 calls have no effort field — use the plugin's agent types (`fable-lead:scout`
-/ `finder` / `verifier` / `synthesizer`), which pin both. Name the config that
+/ `finder` / `builder` / `verifier` / `synthesizer`), which pin both; never
+`general-purpose` for real work — it inherits the session's model default AND
+its effort. `fable-lead-calibration` reports what actually served each role. Name the config that
 RAN in every catch-ledger `--task` so per-config quality accumulates passively.
 
 Inheriting (omitting `model`) is the tool's capability-safe default and never a

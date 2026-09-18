@@ -3,7 +3,7 @@ name: fable-lead
 description: >
   Bootstrap the Fable-led working system into the current session and
   project: verify/install the global working-system files (user CLAUDE.md +
-  scout/finder/verifier/synthesizer agents), scaffold the project's CLAUDE.md and
+  scout/finder/builder/verifier/synthesizer agents), scaffold the project's CLAUDE.md and
   PROJECT_MEMORY if absent, confirm model/effort defaults, and report status.
   Invoke in any new project, on any new machine, or whenever unsure the
   system is active.
@@ -20,11 +20,11 @@ so and show the diff summary instead; the user decides.
      `~/.claude` is not read: tell the user to paste the doctrine into the
      Cowork project's Instructions instead.)
    - Agents: this plugin already ships `fable-lead:scout` /
-     `fable-lead:finder` / `fable-lead:verifier` / `fable-lead:synthesizer`
-     with model+effort pinned (sonnet/medium, opus/high, sonnet/high,
-     fable/xhigh — calibrated 2026-09-18, see the role table) — nothing to install, and
+     `fable-lead:finder` / `fable-lead:builder` / `fable-lead:verifier` /
+     `fable-lead:synthesizer` with model+effort pinned (sonnet/medium,
+     opus/high, opus/high, sonnet/high, fable/xhigh — calibrated 2026-09-18, see the role table) — nothing to install, and
      they auto-update with the plugin. If same-named USER-LEVEL copies exist
-     (`~/.claude/agents/{scout,finder,verifier,synthesizer}.md`), warn that they
+     (`~/.claude/agents/{scout,finder,builder,verifier,synthesizer}.md`), warn that they
      OVERRIDE the plugin's when invoked un-namespaced and will go stale as
      the plugin updates; offer to remove them (with the user's confirmation)
      so the plugin stays canonical. Only offer to INSTALL user-level copies
@@ -55,7 +55,8 @@ so and show the diff summary instead; the user decides.
 4. **Adopt the doctrine for this session**, whether or not any files were
    installed: the head reads conclusions, not material (bulk reading goes to
    a scout; read the decisive lines yourself); subagents are named
-   deliberately by role (scout sonnet/medium, finder opus/high, verifier
+   deliberately by role (scout sonnet/medium, finder and builder opus/high —
+   never general-purpose, which inherits effort — verifier
    sonnet/high ×2 votes on ship-critical claims, fable only for synthesis or
    reasoning-bound verification, haiku never where a miss ships); verifiers
    refute rather than check; every number carries its producing command and

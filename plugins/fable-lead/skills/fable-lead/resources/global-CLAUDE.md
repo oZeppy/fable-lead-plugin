@@ -42,9 +42,9 @@ mostly ingestion; spawn preamble ≈ 8% of subagent quota.
   scout is a reading tool, and "default to solo" below still holds.
 - **Read the decisive lines yourself** before acting on a scout's or finder's
   report — ten lines at the pointer, not the file.
-- **Shell output is 54% of everything agents ingest** (58% subagents, 35% head;
-  MEASURED_IN_SAMPLE, 103,681 results; `RESULTS-intake.md`), and 12.5% of
-  results carry half of it. Agent-to-agent text is a few percent. Print
+- **Shell output is half of everything agents ingest** (51%: 55% subagents,
+  33% head; MEASURED_IN_SAMPLE, 89,341 distinct results; `RESULTS-intake.md`),
+  and 12.5% of results carry half of it. Agent-to-agent text is a few percent. Print
   counts, exit codes, a `tail`, a targeted `grep`; send the rest to a file.
 - Spawning is cheap; do not merge unrelated tasks into one long agent.
 - A Lean-like compact notation for hand-backs was tested and LOST to capped

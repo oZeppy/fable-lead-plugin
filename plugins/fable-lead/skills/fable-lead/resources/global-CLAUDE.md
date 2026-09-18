@@ -56,7 +56,7 @@ model's errors independent across votes — not by "bulk vs head".
 |---|---|---|---|
 | head | session model (`fable` today) | judgment, decisions, the owner | — |
 | `scout` | sonnet / medium | the head's reading delegate: locate, read, summarise | new in v3; low blast radius because the head re-reads the decisive lines |
-| `sub` (finder) | opus / high | bulk search, measurement, dataset building — recall matters and no verifier can restore a miss | unchanged until tier-ab-004 Part B measures Sonnet's recall |
+| `sub` (finder) | opus / high | bulk search, measurement, dataset building — recall matters and no verifier can restore a miss | MEASURED 2026-09-18 (Part B): sonnet/high returned a third as many findings (9 vs 26/run) and 1.0 vs 3.5 known defects/run at the SAME cost per finding — smaller, not cheaper. For coverage-critical passes fable/medium found the most (33/run, fastest) at 1.35× per finding, and a second run of the same tier beat a better single run (5+2 → 6 of 10) |
 | `build` (builder) | opus / high | delegated implementation: one scoped change, built and demonstrated | new in v3 — pins what `general-purpose` left to inheritance (48% of subagent quota ran unpinned, MEASURED 2026-09-18); Sonnet for builds is unmeasured |
 | `chk` (verifier) | **sonnet / high** | refutation; its misses ship | MEASURED 2026-09-18, on live trial to 2026-10-02 — tag the ledger `chk=sonnet-5/high` |
 | `lead` | fable / xhigh (synthesis), max (vote splits) | synthesis that ships verbatim; verification that turns on novel reasoning; split escalation | unchanged — effort above high is unmeasured for these, and they are rare |
@@ -82,7 +82,10 @@ re-adjudicated, 4 arms × 2 votes, 128 agents): opus-5/high 32/32;
 **sonnet-5/high 32/32, zero flips, −66% quota per verdict, ~half the
 wall-clock**; fable-5.1/medium 32/32, fastest, +37% quota; haiku 26/32.
 CEILING: three arms were perfect, so this set cannot rank them (Wilson lower
-bound 89%) — harder boundary claims are owed before the trial ends. Extra
+bound 89%) — harder boundary claims are owed before the trial ends. Part B
+(finder tier, same day, 20 finders + 39 refuters): precision was ~97% for every
+tier on a severity-ranked sample, so tiers differ at the finder role in YIELD
+and RECALL — what no verifier can add back — and not at the verifier role. Extra
 rigor comes from VOTES, not effort: ship-critical claims get TWO independent
 `chk` votes; a v1≠v2 split escalates to `lead` at effort max (003:
 disagreement flagged 2/2 errors; agreement was 46/46 correct; wrong verdicts

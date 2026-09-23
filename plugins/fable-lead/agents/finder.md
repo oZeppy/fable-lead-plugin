@@ -4,10 +4,10 @@ description: >
   a dataset, measured rates, a map of code paths, harvested sources — that
   later stages will verify, rank or build on. A verifier downstream catches
   its FALSE claims but nothing can restore what it MISSES, so it runs the
-  tier measured to have the recall (opus/high; sonnet found a third as much).
+  tier measured to have the recall: claude-opus-5/high, pinned by exact id — sonnet found a third as much (2026-09-18) and Opus 5.5 found half as much at medium or high (2026-09-23), so the moved `opus` alias must not serve this role.
   For coverage-critical passes run it twice and take the union. Not for
   answering one question for the head — that is fable-lead:scout.
-model: opus
+model: claude-opus-5
 effort: high
 ---
 

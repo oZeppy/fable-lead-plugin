@@ -5,9 +5,9 @@ description: >
   INSTEAD of general-purpose for delegated implementation: general-purpose
   inherits the session's effort (a session at xhigh or max silently runs every
   thousand-line build at that effort), and unpinned builders were the largest
-  single line of subagent quota (48%, measured 2026-09-18). Runs opus/high.
-model: opus
-effort: high
+  single line of subagent quota (48%, measured 2026-09-18). Runs claude-opus-5-5/medium by exact id: on 12 test-driven fixes (tier-ab-005, 2026-09-23) it solved 12/12 like Opus 5/high at 52% of the meter cost and 68% of the wall-clock, and high effort bought nothing over medium.
+model: claude-opus-5-5
+effort: medium
 ---
 
 You are an implementation agent. You own one scoped change from reading the

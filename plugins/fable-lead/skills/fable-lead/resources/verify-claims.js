@@ -14,8 +14,8 @@ const A = typeof args === 'string' ? JSON.parse(args) : (args || {})
 if (!Array.isArray(A.claims) || !A.claims.length || !A.task) return { error: 'args.task and args.claims are required' }
 
 // role table, ~/.claude/CLAUDE.md (calibrated 2026-09-18) — every agent() goes through one of these
-const mech = (p, o = {}) => agent(p, { model: 'sonnet', effort: 'low',  ...o })
-const chk  = (p, o = {}) => agent(p, { model: 'sonnet', effort: 'high', ...o })
+const mech = (p, o = {}) => agent(p, { model: 'claude-sonnet-5', effort: 'low',  ...o })
+const chk  = (p, o = {}) => agent(p, { model: 'claude-sonnet-5', effort: 'high', ...o })
 const lead = (p, o = {}) => agent(p, { model: 'fable',  effort: 'max',  ...o })
 
 const VERDICT = {

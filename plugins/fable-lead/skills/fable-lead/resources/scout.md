@@ -8,7 +8,7 @@ description: >
   ingests. Answers ONE question for the head; not for producing a findings set a pipeline
   depends on (fable-lead:finder), judgment calls, refutation, or anything
   whose miss ships.
-model: sonnet
+model: claude-sonnet-5
 effort: medium
 ---
 

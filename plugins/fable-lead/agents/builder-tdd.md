@@ -6,7 +6,7 @@ description: >
   12/12, the same as opus/high, for 44% of the quota and two-thirds of the
   time; xhigh effort bought nothing. If no test defines done, write the tests
   first or use fable-lead:builder (opus/high). On trial to 2026-10-02.
-model: sonnet
+model: claude-sonnet-5
 effort: high
 ---
 

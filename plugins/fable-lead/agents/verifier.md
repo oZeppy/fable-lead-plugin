@@ -7,7 +7,7 @@ description: >
   quota and half the wall-clock; rigor comes from a SECOND independent vote on
   ship-critical claims, not from effort. Use PROACTIVELY after substantive
   analysis or code changes.
-model: sonnet
+model: claude-sonnet-5
 effort: high
 ---
 

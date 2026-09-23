@@ -9,16 +9,16 @@ they conflict. Evidence for every number: `~/.claude/experiments/tier-ab-004/`
 
 ## If you are a subagent
 
-This file reaches you too. Do the task you were given with the tools you have:
-do NOT delegate your reading to a scout or spawn agents unless your task says
-to (a scout that spawns scouts recurses). You do not write the catch ledger —
+This file reaches you too. Do the task with the tools you have: do NOT
+delegate to a scout or spawn agents unless your task says to (scouts spawning
+scouts recurse). You do not write the catch ledger —
 the head does. Your hand-back is ingested at the head's rate: conclusion first,
 ≤ ~400 words, `file:line` pointers, working in a file whose path you name. The
 output, evidence-class and verification rules below apply to you in full.
 
 ## Confirm you are looking at the present
 
-Sessions run in parallel and ship. Before trusting any doc or concluding work
+Before trusting any doc or concluding work
 does not exist: `git fetch`, fast-forward, check open PRs and recent branches
 (`gh pr list`, `git log --all --since='2 days'`). A dated filename in a doc is a
 claim about the past — glob for the latest, never trust a hardcoded name.
@@ -74,8 +74,8 @@ independent across votes.
 | mechanical | claude-sonnet-5 / low | work a test or compiler makes loud when wrong | — |
 
 **Haiku is barred from any role whose output ships or gates a decision**: 26/32
-as a verifier, and on 2 of its 4 wrong claims both votes were wrong, agreed,
-and carried confidence 4–5 — correlated errors defeat vote-splitting.
+as a verifier, with both votes wrong and agreeing on 2 of its 4 wrong claims —
+correlated errors defeat vote-splitting.
 
 ```js
 const scout  = (p, o = {}) => agent(p, { model: 'claude-sonnet-5',  effort: 'medium', ...o })
@@ -87,11 +87,11 @@ const adj    = (p, o = {}) => agent(p, { model: 'fable',            effort: 'max
 const lead   = (p, o = {}) => agent(p, { model: 'fable',            effort: 'xhigh',  ...o })
 ```
 
-The pattern across Parts A–C: tier matters exactly where nothing downstream
-can restore a miss (discovery) and not where a check — a refuter, a test —
-stands behind the work. Extra rigor comes from VOTES, not effort (003: xhigh
-+38% tool calls, +75% output, worse score), and only from models whose errors
-are independent. Confidence is not a signal; disagreement is.
+Across Parts A–C: tier matters exactly where nothing downstream can restore a
+miss (discovery), not where a refuter or a test stands behind the work. Rigor
+comes from VOTES, not effort (003: xhigh +38% tool calls, +75% output, worse
+score), and only from models whose errors are independent. Confidence is not a
+signal; disagreement is.
 
 **Enforcement, such as it is.** Workflow scripts: `fable-lead-lint SCRIPT.js`
 fails any `agent()` that does not pin model AND effort (MEASURED: 492 unpinned
@@ -121,8 +121,8 @@ Default to solo — head, scouts, one verification pass — and escalate
 deliberately:
 
 - **Orchestrate** (finder fleet + refuters) when the pass is coverage-shaped:
-  audits, "find everything", unknown-size discovery, an unfamiliar or
-  many-surface target, or when one miss costs more than the premium.
+  audits, "find everything", unknown-size discovery, or when one miss costs
+  more than the premium.
 - **Escalate on thinness**: thin results on a surface believed rich is a
   coverage failure — rerun orchestrated. The reverse holds: findings that need
   ranking, not more eyes, go to the head.
@@ -145,15 +145,15 @@ real catches come from re-deriving, not re-reading.
   re-runs machine-checkable evidence with no model (a prototype: head-invoked,
   not yet for unattended use); (2) refuters with tools — "try to refute this;
   if it does not reproduce, drop it"; (3) the adjudicator, on splits only. The
-  procedure is executable: run the Workflow tool with scriptPath
+  procedure is executable: the Workflow tool with scriptPath
   `~/Documents/fable-lead-plugin/plugins/fable-lead/skills/fable-lead/resources/verify-claims.js`
-  (readable in every session via `permissions.additionalDirectories`; if a
-  session refuses the path, `/fable-lead` installs a project copy under
-  `.claude/workflows/`). It returns verdicts and the ledger command.
+  (readable everywhere via `permissions.additionalDirectories`; `/fable-lead`
+  installs a project copy if a session refuses the path). It returns verdicts
+  and the ledger command.
   Ship-critical claims get two independent votes.
 - "Applies clean and tests pass" is not a review: 3 of 21 third-party changes
-  with green tests failed an adversarial read (the cswap-fork pick review,
-  2026-09-18: `~/cswap-fork/FORK.md` and its catch-ledger entry). Third-party code
+  with green tests failed an adversarial read (cswap-fork pick review 2026-09-18,
+  `~/cswap-fork/FORK.md`). Third-party code
   headed for a credential path, a daemon or anything unattended gets that read.
 - **Claim phrasing decides boundary verdicts**: state PRESENT defects as
   present, LATENT hazards as hazards, and keep a premise separate from its

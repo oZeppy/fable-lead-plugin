@@ -54,24 +54,23 @@ mostly ingestion; spawn preamble ≈ 8% of subagent quota.
 
 ## Roles (calibrated 2026-09-18 on claude-fable-5-1, claude-opus-5, claude-sonnet-5, claude-haiku-4-5; 2026-09-23 on claude-opus-5-5)
 
-Subagents are **named deliberately, by EXACT model id**, never inherited and
-never by alias: an agent without a pinned effort runs at the session's
-(MEASURED 2026-09-18: 24 `general-purpose` builders were 48% of subagent quota,
-19 of them at `max`), and an alias moves without notice — on 2026-09-23 the bare
-`opus` alias in Claude Code 2.1.280 served `claude-opus-5-5` (MEASURED,
-wf_1aea6258-972), which cut the finder's recall in half before anyone had
-measured it. Tier by two questions: can anything downstream restore this
-role's miss, and are this model's errors independent across votes.
+Subagents are **named deliberately, by EXACT model id** — never inherited (an
+unpinned effort runs at the session's: MEASURED 2026-09-18, 24 `general-purpose`
+builders were 48% of subagent quota, 19 at `max`) and never by alias (MEASURED
+2026-09-23, wf_1aea6258-972: the bare `opus` alias served `claude-opus-5-5`,
+halving the finder's recall before it was measured). Tier by two questions:
+can anything downstream restore this role's miss, and are this model's errors
+independent across votes.
 
 | role — agent type | exact model id / effort | use for | evidence |
 |---|---|---|---|
 | head | session model | judgment, decisions, the owner | — |
 | scout — `fable-lead:scout` | claude-sonnet-5 / medium | answer ONE question for the head by reading | unmeasured; low blast radius (the head re-reads the decisive lines) |
-| finder — `fable-lead:finder` | claude-opus-5 / high | return a SET a pipeline builds on; nothing restores a miss | 004 Part B, n=2/2/1 runs, direction only: sonnet found a third as much (9 vs 26/run) at the same cost per finding; fable/medium found most (33) at 1.35×; two runs' union beat one better run. 005 Part B (2026-09-23, n=2/2/1): Opus 5.5 found 2.5/10 known at medium and 3.0/10 at high vs 6/10 for Opus 5 — cheaper (42%) but it misses, so it does not get this role |
-| builder — `fable-lead:builder` | claude-opus-5-5 / medium | implementation with no test that defines done | 005 Part C, 12 test-driven fixes × 3 arms, script-graded: 12/12 for Opus 5/high, Opus 5.5/medium and Opus 5.5/high; 5.5/medium at 52% of the meter cost, 68% of the time, a third of the tool calls, diffs half the reference size; high bought nothing over medium |
-| builder-tdd — `fable-lead:builder-tdd` | claude-sonnet-5 / high | implementation where FAILING TESTS define done | Part C, 12 tasks/arm, script-graded: every tier 12/12 (Wilson lower bound 76% — a ceiling, not a ranking); sonnet −56% quota, −33% time; opus/xhigh +19% for nothing. Trial to 2026-10-02; at the review, Opus 5.5/medium ($0.16/task on the same bench vs Sonnet's $0.18) is the candidate |
+| finder — `fable-lead:finder` | claude-opus-5 / high | return a SET a pipeline builds on; nothing restores a miss | 004 B (n=2/2/1, direction only): sonnet found a third as much (9 vs 26/run); fable/medium most (33) at 1.35×; two runs' union beat one better run. 005 B (n=2/2/1): Opus 5.5 found 2.5/10 known at medium, 3.0/10 at high, vs 6/10 for Opus 5 — 42% of the cost, but it misses |
+| builder — `fable-lead:builder` | claude-opus-5-5 / medium | implementation with no test that defines done | 005 C, 12 test-driven fixes, script-graded: 12/12 for Opus 5/high and Opus 5.5 at medium and high; 5.5/medium at 52% of the meter cost, 68% of the time, a third of the tool calls; high bought nothing |
+| builder-tdd — `fable-lead:builder-tdd` | claude-sonnet-5 / high | implementation where FAILING TESTS define done | Part C, 12 tasks/arm, script-graded: every tier 12/12 (Wilson lower bound 76% — a ceiling, not a ranking); sonnet −56% quota, −33% time; opus/xhigh +19% for nothing. Trial to 2026-10-02; Opus 5.5/medium ($0.16 vs $0.18/task, same bench) is the candidate at the review |
 | verifier — `fable-lead:verifier` | claude-sonnet-5 / high | refutation; its misses ship | Part A, 16 claims × 2 votes: 32/32 = opus/high (Wilson lower bound 89%, ceiling) at −66% quota. Trial to 2026-10-02 |
-| adjudicator — `fable-lead:adjudicator` | fable (alias: one model in the line) / max | vote splits ONLY | 003: both errors sat in split votes, 46/46 agreeing pairs correct |
+| adjudicator — `fable-lead:adjudicator` | fable / max | vote splits ONLY | 003: both errors sat in split votes, 46/46 agreeing pairs correct |
 | synthesizer — `fable-lead:synthesizer` | fable / xhigh | the one output that ships verbatim | unmeasured above high; rare |
 | mechanical | claude-sonnet-5 / low | work a test or compiler makes loud when wrong | — |
 
@@ -104,14 +103,12 @@ have no effort field, so use the agent types above and never
 `general-purpose` for real work; `fable-lead-calibration` reports after the
 fact which model and effort actually served each role and flags unpinned use.
 
-**Calibration is a component.** When `fable-lead-calibration` shows a role
-served by a model id this table was not measured on (STALE) or a different id
-than it pins (DRIFT), the row is stale: rerun that role's part from
+**Calibration is a component.** When `fable-lead-calibration` flags a role
+STALE (unmeasured id) or DRIFT (not the pinned id), rerun that role's part from
 `~/.claude/experiments/tier-ab-004/launchers/` (A 4.8M tokens / 8 min, B 6.4M /
-20, C 1.9M / 9 + 17 min grading; the builder bench rebuilds from
-`launchers/bench/rebuild.sh`) before trusting it. A new model enters the table
-only through that rerun — 005 took Opus 5.5 into the builder role and kept it
-out of the finder role on the same day's evidence.
+20, C 1.9M / 9 + 17 min grading; bench: `launchers/bench/rebuild.sh`) before
+trusting the row. A new model enters the table only that way — 005 admitted
+Opus 5.5 as builder and refused it as finder on the same day's evidence.
 
 Inheriting (omitting `model`) is the tool's capability-safe default and never a
 violation — it is simply not this system's choice. Prompt capable models with

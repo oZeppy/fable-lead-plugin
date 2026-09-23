@@ -5,8 +5,7 @@ Source of truth: `~/Documents/fable-lead-plugin`, file
 2026-09-23; local, not pushed). `~/.claude/CLAUDE.md` is a byte copy —
 regenerate it, never hand-edit it. Project CLAUDE.md files override this where
 they conflict. Evidence for every number: `~/.claude/experiments/tier-ab-004/`
-(RESULTS*.md, DESIGN.md) and `~/.claude/experiments/tier-ab-005/` (Opus 5.5,
-2026-09-23) unless another source is named.
+(RESULTS*.md, DESIGN.md) and `tier-ab-005/` (Opus 5.5) unless another source is named.
 
 ## If you are a subagent
 
@@ -48,9 +47,9 @@ mostly ingestion; spawn preamble ≈ 8% of subagent quota.
   and 12.5% of results carry half of it. Agent-to-agent text is a few percent. Print
   counts, exit codes, a `tail`, a targeted `grep`; send the rest to a file.
 - Spawning is cheap; do not merge unrelated tasks into one long agent.
-- A Lean-like compact notation for hand-backs was tested and LOST to capped
-  prose on tokens, fidelity and cost to write (n=5 reports). Hand-backs are
-  prose; machine-checkable claims go in a JSON file for `claim-check`.
+- A Lean-like compact hand-back notation LOST to capped prose on tokens,
+  fidelity and cost to write (n=5). Hand-backs are prose; machine-checkable
+  claims go in a JSON file for `claim-check`.
 
 ## Roles (calibrated 2026-09-18 on claude-fable-5-1, claude-opus-5, claude-sonnet-5, claude-haiku-4-5; 2026-09-23 on claude-opus-5-5)
 
@@ -66,9 +65,9 @@ independent across votes.
 |---|---|---|---|
 | head | session model | judgment, decisions, the owner | — |
 | scout — `fable-lead:scout` | claude-sonnet-5 / medium | answer ONE question for the head by reading | unmeasured; low blast radius (the head re-reads the decisive lines) |
-| finder — `fable-lead:finder` | claude-opus-5 / high | return a SET a pipeline builds on; nothing restores a miss | 004 B (n=2/2/1, direction only): sonnet found a third as much (9 vs 26/run); fable/medium most (33) at 1.35×; two runs' union beat one better run. 005 B (n=2/2/1): Opus 5.5 found 2.5/10 known at medium, 3.0/10 at high, vs 6/10 for Opus 5 — 42% of the cost, but it misses |
+| finder — `fable-lead:finder` | claude-opus-5 / high | return a SET a pipeline builds on; nothing restores a miss | 004 B (n=2/2/1): sonnet found a third as much (9 vs 26/run); fable/medium most (33) at 1.35×; two runs' union beat one better run. 005 B (n=2/2/1): Opus 5.5 found 2.5–3.0/10 known vs 6/10 for Opus 5 at 42% of the cost — it misses |
 | builder — `fable-lead:builder` | claude-opus-5-5 / medium | implementation with no test that defines done | 005 C, 12 test-driven fixes, script-graded: 12/12 for Opus 5/high and Opus 5.5 at medium and high; 5.5/medium at 52% of the meter cost, 68% of the time, a third of the tool calls; high bought nothing |
-| builder-tdd — `fable-lead:builder-tdd` | claude-sonnet-5 / high | implementation where FAILING TESTS define done | Part C, 12 tasks/arm, script-graded: every tier 12/12 (Wilson lower bound 76% — a ceiling, not a ranking); sonnet −56% quota, −33% time; opus/xhigh +19% for nothing. Trial to 2026-10-02; Opus 5.5/medium ($0.16 vs $0.18/task, same bench) is the candidate at the review |
+| builder-tdd — `fable-lead:builder-tdd` | claude-sonnet-5 / high | implementation where FAILING TESTS define done | 004 C, 12 tasks/arm, script-graded: every tier 12/12 (Wilson lower bound 76%, a ceiling); sonnet −56% quota, −33% time; opus/xhigh +19% for nothing. Trial to 2026-10-02; Opus 5.5/medium ($0.16 vs $0.18/task) is the candidate |
 | verifier — `fable-lead:verifier` | claude-sonnet-5 / high | refutation; its misses ship | Part A, 16 claims × 2 votes: 32/32 = opus/high (Wilson lower bound 89%, ceiling) at −66% quota. Trial to 2026-10-02 |
 | adjudicator — `fable-lead:adjudicator` | fable / max | vote splits ONLY | 003: both errors sat in split votes, 46/46 agreeing pairs correct |
 | synthesizer — `fable-lead:synthesizer` | fable / xhigh | the one output that ships verbatim | unmeasured above high; rare |
@@ -79,7 +78,6 @@ as a verifier, and on 2 of its 4 wrong claims both votes were wrong, agreed,
 and carried confidence 4–5 — correlated errors defeat vote-splitting.
 
 ```js
-// exact ids: agent() honours them (MEASURED 2026-09-23); an alias can move under you
 const scout  = (p, o = {}) => agent(p, { model: 'claude-sonnet-5',  effort: 'medium', ...o })
 const sub    = (p, o = {}) => agent(p, { model: 'claude-opus-5',    effort: 'high',   ...o })
 const build  = (p, o = {}) => agent(p, { model: 'claude-opus-5-5',  effort: 'medium', ...o })
@@ -97,8 +95,7 @@ are independent. Confidence is not a signal; disagreement is.
 
 **Enforcement, such as it is.** Workflow scripts: `fable-lead-lint SCRIPT.js`
 fails any `agent()` that does not pin model AND effort (MEASURED: 492 unpinned
-calls across 294 scripts on this machine, 75 of them in a built-in skill's
-template rather than head-authored). Agent-tool calls
+calls across 294 scripts, 75 in a built-in template). Agent-tool calls
 have no effort field, so use the agent types above and never
 `general-purpose` for real work; `fable-lead-calibration` reports after the
 fact which model and effort actually served each role and flags unpinned use.
@@ -110,9 +107,9 @@ STALE (unmeasured id) or DRIFT (not the pinned id), rerun that role's part from
 trusting the row. A new model enters the table only that way — 005 admitted
 Opus 5.5 as builder and refused it as finder on the same day's evidence.
 
-Inheriting (omitting `model`) is the tool's capability-safe default and never a
-violation — it is simply not this system's choice. Prompt capable models with
-the outcome, the constraints and the evidence standard, not the steps.
+Inheriting (omitting `model`) is the tool's safe default, not this system's
+choice. Prompt capable models with the outcome, the constraints and the
+evidence standard, not the steps.
 
 ## When to orchestrate — route by the goal of the pass
 

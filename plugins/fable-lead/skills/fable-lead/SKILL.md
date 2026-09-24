@@ -45,6 +45,16 @@ so and show the diff summary instead; the user decides.
    nothing on verification or test-driven builds. So the check that matters is
    step 4's — real work goes to the pinned agent types. Settings are the
    user's; never edit them silently.
+   Also REPORT the account-bound tools rule (this machine, 2026-09-24): Claude
+   in Chrome (`mcp__claude-in-chrome__*`) and Artifact publishing run on the
+   ethan account. In a global session the `cswap-account-hook` hooks in
+   settings pin ethan on the first Chrome call, hold it while calls continue,
+   and the Stop hook restores the previous account at the end of the turn;
+   sessions with their own CLAUDE_CONFIG_DIR (rc, `cswap run`) have no Chrome
+   and are never switched. If the hooks are absent, the manual form is
+   `cswap switch ethan` before and `cswap switch <previous>` after. The
+   status line is terminal-TUI only by Claude Code's design — never expect it
+   in the desktop app, Cowork, IDE or remote sessions.
 
 3. **Project scaffolding** (only inside a project directory; skip cleanly if
    the cwd is not a git repo and say so):

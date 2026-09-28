@@ -12,21 +12,20 @@ carries the command that produced it.
   working-doctrine files, scaffolds a lean project `CLAUDE.md` and a
   Decisions/Corrections/Constraints memory file if the project has none, and
   adopts the doctrine for the session. Never overwrites anything that exists.
-- **Seven agents with model + effort pinned** (calibrated 2026-09-18 against
-  Fable 5.1 / Opus 5 / Sonnet 5; used automatically when the head delegates):
+- **Seven agents with model + effort pinned by exact id** (<!-- BEGIN pins:agents -->claude-sonnet-5/medium, claude-opus-5/high, claude-opus-5-5/medium, claude-sonnet-5/high, claude-sonnet-5/high, fable/max, fable/xhigh — calibrated 2026-09-18 and 2026-09-23<!-- END pins:agents -->,
+  in the order below; generated from `plugins/fable-lead/roles.json` by `fable-lead-pins`, with the
+  evidence for each pin; used automatically when the head delegates):
   - `fable-lead:scout` — the head's reading delegate: locate, read, summarise
-    to a file, return pointers (Sonnet, medium)
-  - `fable-lead:finder` — bulk search/measurement (Opus, high)
-  - `fable-lead:builder` — delegated implementation, built and demonstrated
-    (Opus, high) — use instead of `general-purpose`, which inherits effort
+    to a file, return pointers
+  - `fable-lead:finder` — bulk search/measurement; nothing downstream restores a miss
+  - `fable-lead:builder` — delegated implementation, built and demonstrated —
+    use instead of `general-purpose`, which inherits effort
   - `fable-lead:builder-tdd` — implementation where failing tests define done
-    (Sonnet, high — measured equal to Opus at 44% of the quota)
   - `fable-lead:verifier` — adversarial refutation, two votes on
-    ship-critical claims (Sonnet, high — measured equal to Opus at a third of
-    the quota)
-  - `fable-lead:adjudicator` — vote splits only (Fable, max)
+    ship-critical claims
+  - `fable-lead:adjudicator` — vote splits only
   - `fable-lead:synthesizer` — the one head-class agent whose output ships
-    verbatim (Fable, xhigh)
+    verbatim
 - **The doctrine** (bundled, installable to `~/.claude/CLAUDE.md`): staleness
   checks before trusting any doc, evidence classes on every claim, n and CIs
   demanded up front, suites-before-commit with exit codes checked directly.

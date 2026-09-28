@@ -22,8 +22,8 @@ so and show the diff summary instead; the user decides.
    - Agents: this plugin already ships `fable-lead:scout` /
      `fable-lead:finder` / `fable-lead:builder` / `fable-lead:builder-tdd` /
      `fable-lead:verifier` / `fable-lead:adjudicator` /
-     `fable-lead:synthesizer` with model+effort pinned by EXACT id (claude-sonnet-5/medium,
-     claude-opus-5/high, claude-opus-5-5/medium, claude-sonnet-5/high, claude-sonnet-5/high, fable/max, fable/xhigh — calibrated 2026-09-18 and 2026-09-23; aliases move, see the role table) — nothing to install. They update when
+     `fable-lead:synthesizer` with model+effort pinned by EXACT id (<!-- BEGIN pins:agents -->claude-sonnet-5/medium, claude-opus-5/high, claude-opus-5-5/medium, claude-sonnet-5/high, claude-sonnet-5/high, fable/max, fable/xhigh — calibrated 2026-09-18 and 2026-09-23<!-- END pins:agents -->;
+     aliases move, see the role table) — nothing to install. They update when
      the plugin's local source (`~/Documents/fable-lead-plugin`) is updated and
      the marketplace is refreshed; nothing is fetched from a remote. If same-named USER-LEVEL copies exist
      (`~/.claude/agents/{scout,finder,builder,builder-tdd,verifier,adjudicator,synthesizer}.md`), warn that they
@@ -76,9 +76,9 @@ so and show the diff summary instead; the user decides.
 4. **Adopt the doctrine for this session**, whether or not any files were
    installed: the head reads conclusions, not material (bulk reading goes to
    a scout; read the decisive lines yourself); subagents are named
-   deliberately by role and by exact model id (scout claude-sonnet-5/medium, finder claude-opus-5/high, builder claude-opus-5-5/medium —
-   never general-purpose, which inherits effort, never a bare alias, which moves — verifier
-   claude-sonnet-5/high ×2 votes on ship-critical claims, fable only for synthesis or
+   deliberately by role and by exact model id (<!-- BEGIN pins:roles -->scout claude-sonnet-5/medium, finder claude-opus-5/high, builder claude-opus-5-5/medium, verifier claude-sonnet-5/high<!-- END pins:roles -->
+   ×2 votes on ship-critical claims — never general-purpose, which inherits effort, never a
+   bare alias, which moves — fable only for synthesis or
    reasoning-bound verification, haiku never where a miss ships); verifiers
    refute rather than check; every number carries its producing command and
    n; suites/exit codes before commits; confirm-you-are-in-the-present before
@@ -88,7 +88,8 @@ so and show the diff summary instead; the user decides.
    Tools the doctrine relies on, if present on this machine (report which are
    missing; they live in `~/.local/bin`, mirrored in the owner's ops repo):
    `catch-ledger`, `claim-check`, `fable-lead-lint`, `fable-lead-calibration`,
-   `fable-lead-headroom`.
+   `fable-lead-headroom`, `fable-lead-pins` (the role pins are data in the plugin's
+   `roles.json`; `fable-lead-pins check` says whether every copy matches it).
 
 5. **Report**: one block — what was installed vs already present vs drifted,
    the model/effort status, what was scaffolded, and (if in a repo) the one

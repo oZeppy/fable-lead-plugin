@@ -51,15 +51,8 @@ mostly ingestion; spawn preamble ≈ 8% of subagent quota.
   fidelity and cost to write (n=5). Hand-backs are prose; machine-checkable
   claims go in a JSON file for `claim-check`.
 
+<!-- BEGIN pins:roles -->
 ## Roles (calibrated 2026-09-18 on claude-fable-5-1, claude-opus-5, claude-sonnet-5, claude-haiku-4-5; 2026-09-23 on claude-opus-5-5)
-
-Subagents are **named deliberately, by EXACT model id** — never inherited (an
-unpinned effort runs at the session's: MEASURED 2026-09-18, 24 `general-purpose`
-builders were 48% of subagent quota, 19 at `max`) and never by alias (MEASURED
-2026-09-23, wf_1aea6258-972: the bare `opus` alias served `claude-opus-5-5`,
-halving the finder's recall before it was measured). Tier by two questions:
-can anything downstream restore this role's miss, and are this model's errors
-independent across votes.
 
 | role — agent type | exact model id / effort | use for | evidence |
 |---|---|---|---|
@@ -73,19 +66,28 @@ independent across votes.
 | synthesizer — `fable-lead:synthesizer` | fable / xhigh | the one output that ships verbatim | unmeasured above high; rare |
 | mechanical | claude-sonnet-5 / low | work a test or compiler makes loud when wrong | — |
 
+```js
+const scout = (p, o = {}) => agent(p, { model: 'claude-sonnet-5', effort: 'medium', ...o })
+const sub = (p, o = {}) => agent(p, { model: 'claude-opus-5', effort: 'high', ...o })
+const build = (p, o = {}) => agent(p, { model: 'claude-opus-5-5', effort: 'medium', ...o })
+const buildT = (p, o = {}) => agent(p, { model: 'claude-sonnet-5', effort: 'high', ...o })
+const chk = (p, o = {}) => agent(p, { model: 'claude-sonnet-5', effort: 'high', ...o })
+const adj = (p, o = {}) => agent(p, { model: 'fable', effort: 'max', ...o })
+const lead = (p, o = {}) => agent(p, { model: 'fable', effort: 'xhigh', ...o })
+```
+<!-- END pins:roles -->
+
+Subagents are **named deliberately, by EXACT model id** — never inherited (an
+unpinned effort runs at the session's: MEASURED 2026-09-18, 24 `general-purpose`
+builders were 48% of subagent quota, 19 at `max`) and never by alias (MEASURED
+2026-09-23, wf_1aea6258-972: the bare `opus` alias served `claude-opus-5-5`,
+halving the finder's recall before it was measured). Tier by two questions:
+can anything downstream restore this role's miss, and are this model's errors
+independent across votes.
+
 **Haiku is barred from any role whose output ships or gates a decision**: 26/32
 as a verifier, with both votes wrong and agreeing on 2 of its 4 wrong claims —
 correlated errors defeat vote-splitting.
-
-```js
-const scout  = (p, o = {}) => agent(p, { model: 'claude-sonnet-5',  effort: 'medium', ...o })
-const sub    = (p, o = {}) => agent(p, { model: 'claude-opus-5',    effort: 'high',   ...o })
-const build  = (p, o = {}) => agent(p, { model: 'claude-opus-5-5',  effort: 'medium', ...o })
-const buildT = (p, o = {}) => agent(p, { model: 'claude-sonnet-5',  effort: 'high',   ...o })
-const chk    = (p, o = {}) => agent(p, { model: 'claude-sonnet-5',  effort: 'high',   ...o })
-const adj    = (p, o = {}) => agent(p, { model: 'fable',            effort: 'max',    ...o })
-const lead   = (p, o = {}) => agent(p, { model: 'fable',            effort: 'xhigh',  ...o })
-```
 
 Across Parts A–C: tier matters exactly where nothing downstream can restore a
 miss (discovery), not where a refuter or a test stands behind the work. Rigor

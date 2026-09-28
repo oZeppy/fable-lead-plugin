@@ -1,0 +1,214 @@
+{
+  "_about": "Single source of truth for the fable-lead role pins. Edit here (or `fable-lead-pins set`), then `fable-lead-pins apply`. Model keys are exact ids or cswap-stats longest-prefix price keys; prices are $/MTok [input, output, cache-write-5m, cache-write-1h, cache-read]; calibrated_on is DATE:EXPERIMENT.",
+  "roles": {
+    "head": {
+      "agent": null,
+      "model": null,
+      "effort": null,
+      "use_for": "judgment, decisions, the owner",
+      "evidence": null,
+      "calibrated": null
+    },
+    "scout": {
+      "agent": "fable-lead:scout",
+      "model": "claude-sonnet-5",
+      "effort": "medium",
+      "use_for": "answer ONE question for the head by reading",
+      "evidence": "unmeasured; low blast radius (the head re-reads the decisive lines)",
+      "calibrated": null
+    },
+    "finder": {
+      "agent": "fable-lead:finder",
+      "model": "claude-opus-5",
+      "effort": "high",
+      "use_for": "return a SET a pipeline builds on; nothing restores a miss",
+      "evidence": "004 B (n=2/2/1): sonnet found a third as much (9 vs 26/run); fable/medium most (33) at 1.35×; two runs' union beat one better run. 005 B (n=2/2/1): Opus 5.5 found 2.5–3.0/10 known vs 6/10 for Opus 5 at 42% of the cost — it misses",
+      "calibrated": "2026-09-23:tier-ab-005"
+    },
+    "builder": {
+      "agent": "fable-lead:builder",
+      "model": "claude-opus-5-5",
+      "effort": "medium",
+      "use_for": "implementation with no test that defines done",
+      "evidence": "005 C, 12 test-driven fixes, script-graded: 12/12 for Opus 5/high and Opus 5.5 at medium and high; 5.5/medium at 52% of the meter cost, 68% of the time, a third of the tool calls; high bought nothing",
+      "calibrated": "2026-09-23:tier-ab-005"
+    },
+    "builder-tdd": {
+      "agent": "fable-lead:builder-tdd",
+      "model": "claude-sonnet-5",
+      "effort": "high",
+      "use_for": "implementation where FAILING TESTS define done",
+      "evidence": "004 C, 12 tasks/arm, script-graded: every tier 12/12 (Wilson lower bound 76%, a ceiling); sonnet −56% quota, −33% time; opus/xhigh +19% for nothing",
+      "calibrated": "2026-09-18:tier-ab-004",
+      "trial_until": "2026-10-02",
+      "candidate": "Opus 5.5/medium ($0.16 vs $0.18/task)"
+    },
+    "verifier": {
+      "agent": "fable-lead:verifier",
+      "model": "claude-sonnet-5",
+      "effort": "high",
+      "use_for": "refutation; its misses ship",
+      "evidence": "Part A, 16 claims × 2 votes: 32/32 = opus/high (Wilson lower bound 89%, ceiling) at −66% quota",
+      "calibrated": "2026-09-18:tier-ab-004",
+      "trial_until": "2026-10-02"
+    },
+    "adjudicator": {
+      "agent": "fable-lead:adjudicator",
+      "model": "fable",
+      "effort": "max",
+      "use_for": "vote splits ONLY",
+      "evidence": "003: both errors sat in split votes, 46/46 agreeing pairs correct",
+      "calibrated": "2026-08-13:verifier-ab-003"
+    },
+    "synthesizer": {
+      "agent": "fable-lead:synthesizer",
+      "model": "fable",
+      "effort": "xhigh",
+      "use_for": "the one output that ships verbatim",
+      "evidence": "unmeasured above high; rare",
+      "calibrated": null
+    },
+    "mechanical": {
+      "agent": null,
+      "model": "claude-sonnet-5",
+      "effort": "low",
+      "use_for": "work a test or compiler makes loud when wrong",
+      "evidence": null,
+      "calibrated": null
+    }
+  },
+  "aliases": {
+    "fable": "claude-fable-5-1"
+  },
+  "models": {
+    "claude-fable-5-1": {
+      "family": "fable",
+      "display": "Claude Fable 5.1",
+      "prices": [10.0, 50.0, 12.5, 20.0, 0.25],
+      "price_class": "LISTED",
+      "calibrated_on": "2026-09-18:tier-ab-004"
+    },
+    "claude-fable-5": {
+      "family": "fable",
+      "display": "Claude Fable 5",
+      "prices": [10.0, 50.0, 12.5, 20.0, 1.0],
+      "price_class": "LISTED",
+      "calibrated_on": null
+    },
+    "claude-mythos-5": {
+      "family": "mythos",
+      "display": "Claude Mythos 5",
+      "prices": [10.0, 50.0, 12.5, 20.0, 1.0],
+      "price_class": "LISTED",
+      "calibrated_on": null
+    },
+    "claude-opus-5-5": {
+      "family": "opus",
+      "display": "Claude Opus 5.5",
+      "prices": [4.0, 20.0, 5.0, 8.0, 0.2],
+      "price_class": "ESTIMATED",
+      "price_note": ["Opus 5.5 (2026-09-23, claude-api skill table): $4/$20, cache read $0.20; cache-write", "columns are the standard 1.25x/2x multipliers (ESTIMATED, \"confirm at launch\")"],
+      "calibrated_on": "2026-09-23:tier-ab-005"
+    },
+    "claude-opus-5": {
+      "family": "opus",
+      "display": "Claude Opus 5",
+      "prices": null,
+      "price_class": null,
+      "calibrated_on": "2026-09-18:tier-ab-004"
+    },
+    "claude-opus": {
+      "family": "opus",
+      "display": "Claude Opus",
+      "prices": [5.0, 25.0, 6.25, 10.0, 0.5],
+      "price_class": "LISTED",
+      "calibrated_on": null
+    },
+    "claude-sonnet-5": {
+      "family": "sonnet",
+      "display": "Claude Sonnet 5",
+      "prices": [2.0, 10.0, 2.5, 4.0, 0.2],
+      "price_class": "LISTED",
+      "calibrated_on": "2026-09-18:tier-ab-004"
+    },
+    "claude-sonnet": {
+      "family": "sonnet",
+      "display": "Claude Sonnet",
+      "prices": [3.0, 15.0, 3.75, 6.0, 0.3],
+      "price_class": "LISTED",
+      "calibrated_on": null
+    },
+    "claude-haiku-4-5": {
+      "family": "haiku",
+      "display": "Claude Haiku 4.5",
+      "prices": null,
+      "price_class": null,
+      "served_ids": ["claude-haiku-4-5-20251001"],
+      "calibrated_on": "2026-09-18:tier-ab-004"
+    },
+    "claude-haiku": {
+      "family": "haiku",
+      "display": "Claude Haiku",
+      "prices": [1.0, 5.0, 1.25, 2.0, 0.1],
+      "price_class": "LISTED",
+      "calibrated_on": null
+    }
+  },
+  "wrappers": {
+    "scout": "scout",
+    "sub": "finder",
+    "build": "builder",
+    "buildT": "builder-tdd",
+    "chk": "verifier",
+    "adj": "adjudicator",
+    "lead": "synthesizer"
+  },
+  "rules": {
+    "finder": {
+      "bench": "finder",
+      "kind": "challenger",
+      "text": "candidate only if union recall over 2 runs >= the incumbent's AND sampled precision >= 0.9 AND meter-$/run lower",
+      "conditions": [
+        ["runs", ">=", 2],
+        ["recall_union_rate", ">=", "incumbent"],
+        ["precision", ">=", 0.9],
+        ["meter_usd_per_unit", "<", "incumbent"]
+      ]
+    },
+    "builder": {
+      "bench": "builder",
+      "kind": "cheapest_all_solved",
+      "text": "the config with all tasks solved at the lowest meter-$/task"
+    },
+    "builder-tdd": {
+      "bench": "builder",
+      "kind": "cheapest_all_solved",
+      "text": "the config with all tasks solved at the lowest meter-$/task"
+    },
+    "verifier": {
+      "bench": "refuter",
+      "kind": "challenger",
+      "text": "candidate only if known-defect recall per vote >= the incumbent's AND false-CONFIRMED rate <= the incumbent's AND meter-$/vote lower",
+      "conditions": [
+        ["recall_per_vote", ">=", "incumbent"],
+        ["false_confirmed_rate", "<=", "incumbent"],
+        ["meter_usd_per_unit", "<", "incumbent"]
+      ]
+    },
+    "scout": {
+      "kind": "follows",
+      "role": "verifier",
+      "effort": "medium",
+      "text": "not benchmarked: follows the verifier's model at medium"
+    }
+  },
+  "render": {
+    "skill_roles": ["scout", "finder", "builder", "verifier"],
+    "site_stack": [
+      ["adjudicator", "on the frontier tier"],
+      ["finder", "for discovery"],
+      ["builder", "for delegated builds"],
+      ["verifier", "for verification"]
+    ]
+  }
+}

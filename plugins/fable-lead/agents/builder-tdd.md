@@ -2,10 +2,9 @@
 description: >
   Test-driven implementation agent: use when FAILING TESTS already define
   "done" — a bug with a reproducing test, a feature whose acceptance tests
-  exist. Measured 2026-09-18 (tier-ab-004 Part C, 12 tasks): sonnet/high solved
-  12/12, the same as opus/high, for 44% of the quota and two-thirds of the
-  time; xhigh effort bought nothing. If no test defines done, write the tests
-  first or use fable-lead:builder (opus/high). On trial to 2026-10-02.
+  exist. If no test defines done, write the tests first or use
+  fable-lead:builder.
+  <!-- BEGIN pins:runs -->Runs claude-sonnet-5/high by exact id (004 C, 12 tasks/arm, script-graded: every tier 12/12 (Wilson lower bound 76%, a ceiling); sonnet −56% quota, −33% time; opus/xhigh +19% for nothing; calibrated 2026-09-18, tier-ab-004; on trial to 2026-10-02; candidate: Opus 5.5/medium ($0.16 vs $0.18/task)).<!-- END pins:runs -->
 model: claude-sonnet-5
 effort: high
 ---

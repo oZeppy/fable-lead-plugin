@@ -80,6 +80,7 @@
   "aliases": {
     "fable": "claude-fable-5-1"
   },
+  "price_header": ["API rates in $/MTok (input, output, cache-write-5m 1.25x, cache-write-1h", "2.0x, cache-read 0.1x), from the claude-api pricing reference cached", "2026-06-24. On Max plans this is API-equivalent VALUE consumed, not money", "spent. Longest-prefix match. The 5m/1h split matters: ~45% of this", "machine's cache-creation tokens are 1-hour-TTL writes (audit 2026-08-21),", "and pricing them at 1.25x understated value ~7-9%.", "Re-verified 2026-09-18: Fable 5.1 cache reads are 0.025x ($0.25), not the", "0.1x its \"claude-fable-5\" prefix used to inherit — that overstated every", "5.1 message since 2026-09-08 (cache reads are ~96% of tokens). Mythos 5.1's", "cache-read rate was still open at launch, so it keeps the 5.x rate. Sonnet 5", "is $2/$10; older Sonnets stay $3/$15."],
   "models": {
     "claude-fable-5-1": {
       "family": "fable",
@@ -122,6 +123,14 @@
       "display": "Claude Opus",
       "prices": [5.0, 25.0, 6.25, 10.0, 0.5],
       "price_class": "LISTED",
+      "calibrated_on": null
+    },
+    "claude-sonnet-5-5": {
+      "family": "sonnet",
+      "display": "Claude Sonnet 5.5",
+      "prices": [2.0, 10.0, 2.5, 4.0, 0.2],
+      "price_class": "ESTIMATED",
+      "price_note": ["Sonnet 5.5 (2026-09-25, claude-api bundle; ~/.claude/experiments/tier-ab-006/sonnet-5-5-facts.md): in/out/read LISTED; the two cache-write columns ESTIMATED from the standard 1.25x/2x multipliers"],
       "calibrated_on": null
     },
     "claude-sonnet-5": {

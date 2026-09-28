@@ -2,9 +2,9 @@
 description: >
   Vote-split adjudicator. Use ONLY when two independent verifier votes on the
   same claim disagree (v1 != v2): disagreement is where the uncertainty is, so
-  it is the one place the frontier model is spent at maximum effort. Measured:
-  agreement was 46/46 correct and both errors sat in split votes. Rare by
-  design (about one claim in fifty) — not a general-purpose senior reviewer.
+  it is the one place the strongest configuration is spent. Rare by design
+  (about one claim in fifty) — not a general-purpose senior reviewer.
+  <!-- BEGIN pins:runs -->Runs fable/max by exact id (003: both errors sat in split votes, 46/46 agreeing pairs correct; calibrated 2026-08-13, verifier-ab-003).<!-- END pins:runs -->
 model: fable
 effort: max
 ---

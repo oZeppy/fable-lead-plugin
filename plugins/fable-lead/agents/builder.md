@@ -3,9 +3,9 @@ description: >
   Implementation agent: build or fix one well-scoped change end to end — an
   adapter, a bug fix, a migration, a probe — and prove it works. Use this
   INSTEAD of general-purpose for delegated implementation: general-purpose
-  inherits the session's effort (a session at xhigh or max silently runs every
-  thousand-line build at that effort), and unpinned builders were the largest
-  single line of subagent quota (48%, measured 2026-09-18). Runs claude-opus-5-5/medium by exact id: on 12 test-driven fixes (tier-ab-005, 2026-09-23) it solved 12/12 like Opus 5/high at 52% of the meter cost and 68% of the wall-clock, and high effort bought nothing over medium.
+  inherits the session's effort, and unpinned builders were the largest
+  single line of subagent quota (48%, measured 2026-09-18).
+  <!-- BEGIN pins:runs -->Runs claude-opus-5-5/medium by exact id (005 C, 12 test-driven fixes, script-graded: 12/12 for Opus 5/high and Opus 5.5 at medium and high; 5.5/medium at 52% of the meter cost, 68% of the time, a third of the tool calls; high bought nothing; calibrated 2026-09-23, tier-ab-005).<!-- END pins:runs -->
 model: claude-opus-5-5
 effort: medium
 ---

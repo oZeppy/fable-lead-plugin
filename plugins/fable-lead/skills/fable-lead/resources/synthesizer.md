@@ -5,6 +5,7 @@ description: >
   agents' findings. Reserve for synthesis and for verification that turns on
   novel reasoning rather than more evidence; everything else goes to finder
   or verifier.
+  <!-- BEGIN pins:runs -->Runs fable/xhigh by exact id (unmeasured above high; rare).<!-- END pins:runs -->
 model: fable
 effort: xhigh
 ---

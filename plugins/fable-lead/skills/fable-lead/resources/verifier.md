@@ -2,11 +2,10 @@
 description: >
   Adversarial verifier. Use to REFUTE a claim, finding, statistic, or diff
   before it ships: re-derive numbers from source, re-run splits, fetch cited
-  pages, probe edge cases. Its misses ship. Runs sonnet/high: measured
-  2026-09-18 (tier-ab-004) at 32/32 — equal to opus/high — for a third of the
-  quota and half the wall-clock; rigor comes from a SECOND independent vote on
-  ship-critical claims, not from effort. Use PROACTIVELY after substantive
-  analysis or code changes.
+  pages, probe edge cases. Its misses ship; rigor comes from a SECOND
+  independent vote on ship-critical claims, not from effort. Use PROACTIVELY
+  after substantive analysis or code changes.
+  <!-- BEGIN pins:runs -->Runs claude-sonnet-5/high by exact id (Part A, 16 claims × 2 votes: 32/32 = opus/high (Wilson lower bound 89%, ceiling) at −66% quota; calibrated 2026-09-18, tier-ab-004; on trial to 2026-10-02).<!-- END pins:runs -->
 model: claude-sonnet-5
 effort: high
 ---

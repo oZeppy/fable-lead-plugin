@@ -14,7 +14,7 @@
       "model": "claude-sonnet-5",
       "effort": "medium",
       "use_for": "answer ONE question for the head by reading",
-      "evidence": "unmeasured; low blast radius (the head re-reads the decisive lines)",
+      "evidence": "unmeasured; held until a scout bench exists (007); the head re-reads the decisive lines",
       "calibrated": null
     },
     "finder": {
@@ -22,35 +22,35 @@
       "model": "claude-opus-5",
       "effort": "high",
       "use_for": "return a SET a pipeline builds on; nothing restores a miss",
-      "evidence": "004 B (n=2/2/1): sonnet found a third as much (9 vs 26/run); fable/medium most (33) at 1.35×; two runs' union beat one better run. 005 B (n=2/2/1): Opus 5.5 found 2.5–3.0/10 known vs 6/10 for Opus 5 at 42% of the cost — it misses",
-      "calibrated": "2026-09-23:tier-ab-005"
+      "evidence": "006 B (n=2): UNDECIDED against Sonnet 5.5/medium (same 5/10, 26% of the cost); 005 B: Opus 5.5 found 2.5–3.0/10 vs 6/10; 004 B: sonnet found a third as much, and two runs’ union beat one better run",
+      "calibrated": "2026-09-28:tier-ab-006"
     },
     "builder": {
       "agent": "fable-lead:builder",
-      "model": "claude-opus-5-5",
-      "effort": "medium",
+      "model": "claude-sonnet-5-5",
+      "effort": "high",
       "use_for": "implementation with no test that defines done",
-      "evidence": "005 C, 12 test-driven fixes, script-graded: 12/12 for Opus 5/high and Opus 5.5 at medium and high; 5.5/medium at 52% of the meter cost, 68% of the time, a third of the tool calls; high bought nothing",
-      "calibrated": "2026-09-23:tier-ab-005"
+      "evidence": "006 C, 12 test-driven fixes, a proxy for this role: all four arms 12/12 (Wilson lower bound 76%, a ceiling); effort undetermined; $0.11/task vs $0.24 for Opus 5.5/medium, paired difference [0.098, 0.169]",
+      "calibrated": "2026-09-28:tier-ab-006",
+      "trial_until": "2026-10-12"
     },
     "builder-tdd": {
       "agent": "fable-lead:builder-tdd",
-      "model": "claude-sonnet-5",
+      "model": "claude-sonnet-5-5",
       "effort": "high",
       "use_for": "implementation where FAILING TESTS define done",
-      "evidence": "004 C, 12 tasks/arm, script-graded: every tier 12/12 (Wilson lower bound 76%, a ceiling); sonnet −56% quota, −33% time; opus/xhigh +19% for nothing",
-      "calibrated": "2026-09-18:tier-ab-004",
-      "trial_until": "2026-10-02",
-      "candidate": "Opus 5.5/medium ($0.16 vs $0.18/task)"
+      "evidence": "006 C, 12 tasks/arm: all four arms 12/12 (Wilson lower bound 76%, a ceiling); effort undetermined; $0.11/task vs $0.25 for Sonnet 5/high, paired difference [0.100, 0.177]",
+      "calibrated": "2026-09-28:tier-ab-006",
+      "trial_until": "2026-10-12"
     },
     "verifier": {
       "agent": "fable-lead:verifier",
-      "model": "claude-sonnet-5",
+      "model": "claude-sonnet-5-5",
       "effort": "high",
       "use_for": "refutation; its misses ship",
-      "evidence": "Part A, 16 claims × 2 votes: 32/32 = opus/high (Wilson lower bound 89%, ceiling) at −66% quota",
-      "calibrated": "2026-09-18:tier-ab-004",
-      "trial_until": "2026-10-02"
+      "evidence": "006 A, 7 diffs × 2 votes: 15/32 known-defect finds vs 3/32 for Sonnet 5/high, difference +0.375 [+0.131, +0.581]; claim-verdict accuracy unmeasured; union 9/12 vs 1/12 on the pre-registered set; 14/16 novel claims real; $0.43 vs $0.74/vote",
+      "calibrated": "2026-09-28:tier-ab-006",
+      "trial_until": "2026-10-12"
     },
     "adjudicator": {
       "agent": "fable-lead:adjudicator",
@@ -131,7 +131,7 @@
       "prices": [2.0, 10.0, 2.5, 4.0, 0.2],
       "price_class": "ESTIMATED",
       "price_note": ["Sonnet 5.5 (2026-09-25, claude-api bundle; ~/.claude/experiments/tier-ab-006/sonnet-5-5-facts.md): in/out/read LISTED; the two cache-write columns ESTIMATED from the standard 1.25x/2x multipliers"],
-      "calibrated_on": null
+      "calibrated_on": "2026-09-28:tier-ab-006"
     },
     "claude-sonnet-5": {
       "family": "sonnet",
@@ -227,6 +227,7 @@
       ["finder", "for discovery"],
       ["builder", "for delegated builds"],
       ["verifier", "for verification"]
-    ]
+    ],
+    "table_reserve": 3000
   }
 }

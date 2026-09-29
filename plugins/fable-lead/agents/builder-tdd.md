@@ -4,8 +4,8 @@ description: >
   "done" — a bug with a reproducing test, a feature whose acceptance tests
   exist. If no test defines done, write the tests first or use
   fable-lead:builder.
-  <!-- BEGIN pins:runs -->Runs claude-sonnet-5/high by exact id (004 C, 12 tasks/arm, script-graded: every tier 12/12 (Wilson lower bound 76%, a ceiling); sonnet −56% quota, −33% time; opus/xhigh +19% for nothing; calibrated 2026-09-18, tier-ab-004; on trial to 2026-10-02; candidate: Opus 5.5/medium ($0.16 vs $0.18/task)).<!-- END pins:runs -->
-model: claude-sonnet-5
+  <!-- BEGIN pins:runs -->Runs claude-sonnet-5-5/high by exact id (006 C, 12 tasks/arm: all four arms 12/12 (Wilson lower bound 76%, a ceiling); effort undetermined; $0.11/task vs $0.25 for Sonnet 5/high, paired difference [0.100, 0.177]; calibrated 2026-09-28, tier-ab-006; on trial to 2026-10-12).<!-- END pins:runs -->
+model: claude-sonnet-5-5
 effort: high
 ---
 

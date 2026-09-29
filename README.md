@@ -12,7 +12,7 @@ carries the command that produced it.
   working-doctrine files, scaffolds a lean project `CLAUDE.md` and a
   Decisions/Corrections/Constraints memory file if the project has none, and
   adopts the doctrine for the session. Never overwrites anything that exists.
-- **Seven agents with model + effort pinned by exact id** (<!-- BEGIN pins:agents -->claude-sonnet-5/medium, claude-opus-5/high, claude-opus-5-5/medium, claude-sonnet-5/high, claude-sonnet-5/high, fable/max, fable/xhigh — calibrated 2026-09-18 and 2026-09-23<!-- END pins:agents -->,
+- **Seven agents with model + effort pinned by exact id** (<!-- BEGIN pins:agents -->claude-sonnet-5/medium, claude-opus-5/high, claude-sonnet-5-5/high, claude-sonnet-5-5/high, claude-sonnet-5-5/high, fable/max, fable/xhigh — calibrated 2026-09-18 and 2026-09-23 and 2026-09-28<!-- END pins:agents -->,
   in the order below; generated from `plugins/fable-lead/roles.json` by `fable-lead-pins`, with the
   evidence for each pin; used automatically when the head delegates):
   - `fable-lead:scout` — the head's reading delegate: locate, read, summarise

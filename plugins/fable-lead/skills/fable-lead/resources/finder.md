@@ -8,7 +8,7 @@ description: >
   alias must not serve this role. For coverage-critical passes run it twice
   and take the union. Not for answering one question for the head — that is
   fable-lead:scout.
-  <!-- BEGIN pins:runs -->Runs claude-opus-5/high by exact id (004 B (n=2/2/1): sonnet found a third as much (9 vs 26/run); fable/medium most (33) at 1.35×; two runs' union beat one better run. 005 B (n=2/2/1): Opus 5.5 found 2.5–3.0/10 known vs 6/10 for Opus 5 at 42% of the cost — it misses; calibrated 2026-09-23, tier-ab-005).<!-- END pins:runs -->
+  <!-- BEGIN pins:runs -->Runs claude-opus-5/high by exact id (006 B (n=2): UNDECIDED against Sonnet 5.5/medium (same 5/10, 26% of the cost); 005 B: Opus 5.5 found 2.5–3.0/10 vs 6/10; 004 B: sonnet found a third as much, and two runs’ union beat one better run; calibrated 2026-09-28, tier-ab-006).<!-- END pins:runs -->
 model: claude-opus-5
 effort: high
 ---

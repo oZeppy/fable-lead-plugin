@@ -5,8 +5,8 @@ description: >
   pages, probe edge cases. Its misses ship; rigor comes from a SECOND
   independent vote on ship-critical claims, not from effort. Use PROACTIVELY
   after substantive analysis or code changes.
-  <!-- BEGIN pins:runs -->Runs claude-sonnet-5/high by exact id (Part A, 16 claims × 2 votes: 32/32 = opus/high (Wilson lower bound 89%, ceiling) at −66% quota; calibrated 2026-09-18, tier-ab-004; on trial to 2026-10-02).<!-- END pins:runs -->
-model: claude-sonnet-5
+  <!-- BEGIN pins:runs -->Runs claude-sonnet-5-5/high by exact id (006 A, 7 diffs × 2 votes: 15/32 known-defect finds vs 3/32 for Sonnet 5/high, difference +0.375 [+0.131, +0.581]; claim-verdict accuracy unmeasured; union 9/12 vs 1/12 on the pre-registered set; 14/16 novel claims real; $0.43 vs $0.74/vote; calibrated 2026-09-28, tier-ab-006; on trial to 2026-10-12).<!-- END pins:runs -->
+model: claude-sonnet-5-5
 effort: high
 ---
 

@@ -22,7 +22,7 @@ so and show the diff summary instead; the user decides.
    - Agents: this plugin already ships `fable-lead:scout` /
      `fable-lead:finder` / `fable-lead:builder` / `fable-lead:builder-tdd` /
      `fable-lead:verifier` / `fable-lead:adjudicator` /
-     `fable-lead:synthesizer` with model+effort pinned by EXACT id (<!-- BEGIN pins:agents -->claude-sonnet-5/medium, claude-opus-5/high, claude-opus-5-5/medium, claude-sonnet-5/high, claude-sonnet-5/high, fable/max, fable/xhigh — calibrated 2026-09-18 and 2026-09-23<!-- END pins:agents -->;
+     `fable-lead:synthesizer` with model+effort pinned by EXACT id (<!-- BEGIN pins:agents -->claude-sonnet-5/medium, claude-opus-5/high, claude-sonnet-5-5/high, claude-sonnet-5-5/high, claude-sonnet-5-5/high, fable/max, fable/xhigh — calibrated 2026-09-18 and 2026-09-23 and 2026-09-28<!-- END pins:agents -->;
      aliases move, see the role table) — nothing to install. They update when
      the plugin's local source (`~/Documents/fable-lead-plugin`) is updated and
      the marketplace is refreshed; nothing is fetched from a remote. If same-named USER-LEVEL copies exist
@@ -55,6 +55,19 @@ so and show the diff summary instead; the user decides.
    `cswap switch ethan` before and `cswap switch <previous>` after. The
    status line is terminal-TUI only by Claude Code's design — never expect it
    in the desktop app, Cowork, IDE or remote sessions.
+   Also REPORT the owner-link rule (this machine, 2026-09-28; owner's words:
+   "whenever a session needs to alert me or get input it should use this"):
+   Remote Control is not used. Run `ownerlink status` and report the hub, the
+   ask transport and whether it is locked. One-way alerts go through
+   `notify_owner` / `ownerlink send`; anything that needs the owner goes
+   through `ask_owner` / `ownerlink ask`. ntfy is the only thing that gets his
+   attention (Telegram notifications are off); Telegram is where he answers.
+   An unanswered question is not an approval. Live inbound messages and phone
+   approvals need a session started with `clo` (the channel flag cannot be
+   made a default: Claude Code 2.1.284 has no setting that loads a local
+   channel); tools, hooks and the CLI work in every session without it. If
+   the `mcp__ownerlink__*` tools are absent the session predates the
+   registration — use the CLI.
 
 3. **Project scaffolding** (only inside a project directory; skip cleanly if
    the cwd is not a git repo and say so):
@@ -76,7 +89,7 @@ so and show the diff summary instead; the user decides.
 4. **Adopt the doctrine for this session**, whether or not any files were
    installed: the head reads conclusions, not material (bulk reading goes to
    a scout; read the decisive lines yourself); subagents are named
-   deliberately by role and by exact model id (<!-- BEGIN pins:roles -->scout claude-sonnet-5/medium, finder claude-opus-5/high, builder claude-opus-5-5/medium, verifier claude-sonnet-5/high<!-- END pins:roles -->
+   deliberately by role and by exact model id (<!-- BEGIN pins:roles -->scout claude-sonnet-5/medium, finder claude-opus-5/high, builder claude-sonnet-5-5/high, verifier claude-sonnet-5-5/high<!-- END pins:roles -->
    ×2 votes on ship-critical claims — never general-purpose, which inherits effort, never a
    bare alias, which moves — fable only for synthesis or
    reasoning-bound verification, haiku never where a miss ships); verifiers

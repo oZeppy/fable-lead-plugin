@@ -1,8 +1,8 @@
 {
   "name": "fable-lead",
   "displayName": "Fable Lead",
-  "version": "3.2.7",
-  "description": "A Fable-led working system calibrated on Fable 5.1 / Opus 5.5 / Opus 5 / Sonnet 5: seven agents with model and effort pinned (scout, finder, builder, builder-tdd, verifier, adjudicator, synthesizer), an executable verification workflow, quota-aware head-context discipline, refuter-style verification, measured-numbers discipline, and per-project scaffolding.",
+  "version": "3.2.8",
+  "description": "A Fable-led working system calibrated on Fable 5.1 / Opus 5 / Sonnet 5.5 / Sonnet 5: seven agents with model and effort pinned (scout, finder, builder, builder-tdd, verifier, adjudicator, synthesizer), an executable verification workflow, quota-aware head-context discipline, refuter-style verification, measured-numbers discipline, and per-project scaffolding.",
   "author": {
     "name": "Ethan Burstein",
     "url": "https://github.com/oZeppy"

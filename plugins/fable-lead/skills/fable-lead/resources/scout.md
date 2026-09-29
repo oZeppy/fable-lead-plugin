@@ -8,7 +8,7 @@ description: >
   question for the head; not for producing a findings set a pipeline depends
   on (fable-lead:finder), judgment calls, refutation, or anything whose miss
   ships.
-  <!-- BEGIN pins:runs -->Runs claude-sonnet-5/medium by exact id (unmeasured; low blast radius (the head re-reads the decisive lines)).<!-- END pins:runs -->
+  <!-- BEGIN pins:runs -->Runs claude-sonnet-5/medium by exact id (unmeasured; held until a scout bench exists (007); the head re-reads the decisive lines).<!-- END pins:runs -->
 model: claude-sonnet-5
 effort: medium
 ---

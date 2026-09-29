@@ -197,12 +197,21 @@
     "verifier": {
       "bench": "refuter",
       "kind": "challenger",
-      "text": "candidate only if known-defect recall per vote >= the incumbent's AND false-CONFIRMED rate <= the incumbent's AND meter-$/vote lower",
+      "version": 2,
+      "source": "~/.claude/experiments/tier-ab-006/DESIGN.md, 'Corrections and rule v2' (pre-registered 2026-09-28, before the refuter re-run)",
+      "text": "v2: move to the candidate iff (a) union known-defect recall on CLEAN diffs >= the incumbent's AND (b) precision on DISTINCT unmatched claims >= 0.70 AND (c) meter-$ per vote <= the incumbent's; tie-break between candidate efforts: the lower effort if its union recall is within one defect of the higher",
       "conditions": [
-        ["recall_per_vote", ">=", "incumbent"],
-        ["false_confirmed_rate", "<=", "incumbent"],
-        ["meter_usd_per_unit", "<", "incumbent"]
-      ]
+        ["recall_union_clean", ">=", "incumbent"],
+        ["precision_distinct", ">=", 0.7],
+        ["meter_usd_per_unit", "<=", "incumbent"]
+      ],
+      "tie_break": {
+        "metric": "recall_union_clean",
+        "total": "known_total_clean",
+        "within_defects": 1,
+        "prefer": "lower_effort"
+      },
+      "info": ["mixed_pairs"]
     },
     "scout": {
       "kind": "follows",

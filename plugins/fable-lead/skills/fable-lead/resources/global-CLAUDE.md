@@ -103,9 +103,9 @@ score), and only from models whose errors are independent. Confidence is not a
 signal; disagreement is.
 
 **Enforcement.** `fable-lead-lint SCRIPT.js` fails any workflow `agent()` that
-does not pin model AND effort. Agent-tool calls have no effort field: use the agent types above,
-never `general-purpose` for real work; `fable-lead-calibration` reports which
-model and effort actually served each role.
+does not pin model AND effort. Agent-tool `model` takes aliases only: real work
+uses the agent types; `claude`/`general-purpose` calls pass `effort`.
+`fable-lead-calibration` reports what model and effort served each role.
 
 **Calibration is a component.** On a STALE or DRIFT flag, `fable-lead-pins
 propose --explain` on a fresh `fable-lead-bench` run applies the pre-registered

@@ -31,8 +31,7 @@
       "effort": "high",
       "use_for": "implementation with no test that defines done",
       "evidence": "006 C, 12 test-driven fixes, a proxy for this role: all four arms 12/12 (Wilson lower bound 76%, a ceiling); effort undetermined; $0.11/task vs $0.24 for Opus 5.5/medium, paired difference [0.098, 0.169]",
-      "calibrated": "2026-09-28:tier-ab-006",
-      "trial_until": "2026-10-12"
+      "calibrated": "2026-09-28:tier-ab-006"
     },
     "builder-tdd": {
       "agent": "fable-lead:builder-tdd",
@@ -40,8 +39,7 @@
       "effort": "high",
       "use_for": "implementation where FAILING TESTS define done",
       "evidence": "006 C, 12 tasks/arm: all four arms 12/12 (Wilson lower bound 76%, a ceiling); effort undetermined; $0.11/task vs $0.25 for Sonnet 5/high, paired difference [0.100, 0.177]",
-      "calibrated": "2026-09-28:tier-ab-006",
-      "trial_until": "2026-10-12"
+      "calibrated": "2026-09-28:tier-ab-006"
     },
     "verifier": {
       "agent": "fable-lead:verifier",
@@ -49,8 +47,7 @@
       "effort": "high",
       "use_for": "refutation; its misses ship",
       "evidence": "006 A, 7 diffs × 2 votes: 15/32 known-defect finds vs 3/32 for Sonnet 5/high, difference +0.375 [+0.131, +0.581]; claim-verdict accuracy unmeasured; union 9/12 vs 1/12 on the pre-registered set; 14/16 novel claims real; $0.43 vs $0.74/vote",
-      "calibrated": "2026-09-28:tier-ab-006",
-      "trial_until": "2026-10-12"
+      "calibrated": "2026-09-28:tier-ab-006"
     },
     "adjudicator": {
       "agent": "fable-lead:adjudicator",

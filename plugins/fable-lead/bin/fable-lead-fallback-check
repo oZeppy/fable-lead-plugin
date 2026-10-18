@@ -1,0 +1,392 @@
+#!/usr/bin/env python3
+"""fable-lead-fallback-check — find Fable-pinned subagents that a fallback model actually served.
+
+Claude Code swaps the model under a subagent in two ways: after 3 consecutive 529 overloads it
+switches to a fallback model and latches it; on a safeguard refusal it walks fable -> opus-5-5 ->
+opus-4-8. The agent's result is then NOT a Fable result. Policy (2026-10-18): flag those results
+and re-run them when Fable is available.
+
+REQUESTED model (from <agent>.meta.json): the agent type is fable-lead:adjudicator / :synthesizer
+(roles pinned to fable), or the meta carries "model": "fable" / "claude-fable-*" (Workflow and
+Agent-tool agents spawned with an explicit model). A workflow-subagent with no meta model is not
+Fable-requested. SERVED model (ground truth): the message.model of each assistant turn in the
+sibling .jsonl, de-duped by message id (a turn written as several lines has one id). The
+client-injected "<synthetic>" turns (API-error text) are not a served model and are ignored.
+An agent is flagged when any turn was served by a non-Fable id. Scope: "whole-agent" (no Fable turn),
+"mid-agent" (Fable turns, then a switch), "early-agent" (began on a fallback, Fable served later turns —
+seen once on real data: most of the work, not the last turns, was non-Fable).
+
+MECHANISM: "refusal" when a turn has stop_reason "refusal" or the transcript carries Claude Code's
+refusal marker (a user line with refusedMessageId: "Your response above was stopped by a safety
+classifier"); otherwise "overload (inferred)" (no transcript marker records a 529 switch).
+
+usage: fable-lead-fallback-check [--session ID] [--since ISO | --days N] [--json] [--unreported STATEFILE]
+       fable-lead-fallback-check --hook        (Claude Code hook: JSON on stdin, JSON or nothing on stdout)
+exit:  0 always in normal use (output means "found some"; no output means "none"); 2 only on bad arguments
+"""
+import argparse
+import fcntl
+import glob
+import json
+import math
+import os
+import re
+import sys
+import tempfile
+import time
+from datetime import datetime
+
+SETTLE_S = 30  # hook mode: an agent whose transcript has been still this long (or that wrote a final turn) is done
+HOOK_EVENTS = ("PostToolUse", "UserPromptSubmit")
+HOOK_MAX_LINES = 8  # a session with many old flagged agents must not flood the context on the first check
+FABLE_TYPES = ("fable-lead:adjudicator", "fable-lead:synthesizer")
+FINAL_TOOLS = ("StructuredOutput", "SubagentHandback")  # a turn that calls one of these ends the agent
+REFUSAL_TEXT = "Your response above was stopped by a safety classifier"
+POLICY = "their results are not Fable results; re-run them when Fable is available"
+
+
+def family(model):
+    return next((f for f in ("fable", "mythos", "opus", "sonnet", "haiku") if f"-{f}-" in f"-{model}-"), "?")
+
+
+def is_fable(model):
+    return family(model) == "fable"
+
+
+def parse_ts(s):
+    """ISO-8601 (with Z or offset, any fraction length, or a bare date) -> epoch seconds; None if unparseable."""
+    try:
+        s = re.sub(r"\.(\d+)", lambda m: "." + (m.group(1) + "000000")[:6], str(s).replace("Z", "+00:00"))
+        return datetime.fromisoformat(s).timestamp()
+    except (ValueError, TypeError):
+        return None
+
+
+def load_json(path):
+    try:
+        with open(path) as f:
+            d = json.load(f)
+        return d if isinstance(d, dict) else {}
+    except (OSError, ValueError):
+        return {}
+
+
+def write_json_atomic(path, obj):
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    fd, tmp = tempfile.mkstemp(dir=os.path.dirname(path) or ".", prefix=".fbc-", suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w") as f:
+            json.dump(obj, f)
+        os.replace(tmp, path)
+    except BaseException:
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
+        raise
+
+
+def requested_fable(md):
+    model = md.get("model")
+    return md.get("agentType") in FABLE_TYPES or (isinstance(model, str) and "fable" in model.lower())
+
+
+def read_turns(tr):
+    """Stream one transcript. Returns turns [(model, ts)] in order, refusal evidence, and whether it looks finished."""
+    turns = {}  # message id -> [model, first ts, stop_reason]
+    refusal = False
+    last = None  # the last assistant line seen
+    try:
+        f = open(tr, errors="replace")
+    except OSError:
+        return None
+    with f:
+        for line in f:
+            if '"assistant"' not in line and "refusedMessageId" not in line:
+                continue
+            try:
+                d = json.loads(line)
+            except ValueError:
+                continue
+            if not isinstance(d, dict):
+                continue
+            m = d.get("message") if isinstance(d.get("message"), dict) else {}
+            if d.get("type") == "assistant":
+                last = (d, m)
+                model = m.get("model")
+                if not isinstance(model, str) or not model or model.startswith("<"):
+                    continue  # no model recorded, or "<synthetic>" (client-injected API-error text)
+                t = turns.setdefault(m.get("id") or d.get("uuid") or str(len(turns)), [model, d.get("timestamp"), None])
+                t[0] = model
+                if m.get("stop_reason"):
+                    t[2] = m["stop_reason"]
+                if t[2] == "refusal":
+                    refusal = True
+            elif d.get("refusedMessageId") or (d.get("type") == "user" and d.get("isMeta") and isinstance(m.get("content"), str)
+                                               and m["content"].startswith(REFUSAL_TEXT)):
+                refusal = True
+    finished = False
+    if last:
+        d, m = last
+        blocks = m.get("content") if isinstance(m.get("content"), list) else []
+        tools = [b.get("name") for b in blocks if isinstance(b, dict) and b.get("type") == "tool_use"]
+        finished = m.get("stop_reason") == "end_turn" or any(t in FINAL_TOOLS for t in tools)
+    return {"turns": [(v[0], v[1]) for v in turns.values()], "refusal": refusal, "finished": finished}
+
+
+def analyse(meta_path, md):
+    """One Fable-requested agent -> a record if a fallback model served any turn, else None."""
+    tr = meta_path[:-len(".meta.json")] + ".jsonl"
+    r = read_turns(tr)
+    if not r or not r["turns"]:
+        return None
+    turns = r["turns"]
+    first = next((i for i, (m, _) in enumerate(turns) if not is_fable(m)), None)
+    if first is None:
+        return None
+    by_model = {}
+    for m, _ in turns:
+        by_model[m] = by_model.get(m, 0) + 1
+    parts = os.path.normpath(meta_path).split(os.sep)
+    idx = len(parts) - 1 - parts[::-1].index("subagents") if "subagents" in parts else -1
+    session = parts[idx - 1] if idx > 0 else "?"
+    run_id = parts[idx + 2] if idx >= 0 and len(parts) > idx + 3 and parts[idx + 1] == "workflows" else None
+    agent_id = os.path.basename(meta_path)[len("agent-"):-len(".meta.json")] if os.path.basename(meta_path).startswith("agent-") else os.path.basename(meta_path)[:-len(".meta.json")]
+    atype = clean(md.get("agentType") or "?")  # meta strings reach model context: control-stripped, 60 chars
+    label = atype
+    if atype == "workflow-subagent":
+        label = "workflow[" + clean(md.get("description") or md.get("workflowPhase") or md.get("model") or "?") + "]"
+    mtime = os.path.getmtime(tr)
+    return {"session": session, "agent_id": agent_id, "agent_type": atype, "label": label, "run_id": run_id,
+            "requested_model": clean(md.get("model")) if md.get("model") is not None else None, "first_non_fable_ts": turns[first][1],
+            "turns": len(turns), "turns_by_model": by_model,
+            "scope": "whole-agent" if all(not is_fable(m) for m, _ in turns)
+            else "mid-agent" if first > 0 else "early-agent",
+            "mechanism": "refusal" if r["refusal"] else "overload (inferred)",
+            "finished": r["finished"], "transcript": tr, "_mtime": mtime}
+
+
+def subagent_dirs(session):
+    pat = os.path.expanduser("~/.claude/projects/*/" + (glob.escape(session) + "*" if session else "*") + "/subagents")
+    return glob.glob(pat)
+
+
+def walk(sub):
+    """Yield (meta_path, transcript mtime) for every agent under one subagents/ folder: Agent-tool agents sit
+    directly in it, Workflow agents under workflows/<run id>/ (the .jsonl is the existence test)."""
+    stack = [sub]
+    while stack:
+        d = stack.pop()
+        try:
+            it = list(os.scandir(d))
+        except OSError:
+            continue
+        for e in it:
+            try:
+                if e.is_dir(follow_symlinks=False):
+                    stack.append(e.path)
+                elif e.name.endswith(".jsonl"):
+                    yield e.path[:-len(".jsonl")] + ".meta.json", e.stat().st_mtime
+            except OSError:
+                continue
+
+
+def find_flagged(dirs, since=None, only=None, skip=None, now=None):
+    out = []
+    for sub in dirs:
+        for meta, mt in walk(sub):
+            if since is not None and mt < since:
+                continue
+            if skip is not None and not skip(meta, mt):
+                continue
+            md = load_json(meta)
+            if not md or not requested_fable(md):
+                continue
+            rec = analyse(meta, md)
+            if rec:
+                out.append(rec)
+    return out
+
+
+def key(rec):
+    return rec["session"] + "/" + rec["agent_id"]
+
+
+def short(model):
+    return model.replace("claude-", "")
+
+
+def line_for(rec):
+    models = ", ".join(f"{short(m)}x{n}" for m, n in sorted(rec["turns_by_model"].items(), key=lambda kv: -kv[1]))
+    run = f" {rec['run_id']}" if rec["run_id"] else ""
+    return (f"{rec['first_non_fable_ts'] or '?'}  session {rec['session']}  agent {rec['agent_id']}  {rec['label']}{run}  "
+            f"{rec['scope']}  {models}  {rec['mechanism']}")
+
+
+def hook_text(rec):
+    # only ids, models and counts are trusted; every meta-derived string is control-stripped and cut to 60 chars
+    non = {clean(m, 60, r"[A-Za-z0-9._-]"): n for m, n in rec["turns_by_model"].items() if not is_fable(m)}
+    served = " and ".join(f"{m} for {n}/{rec['turns']} turns" for m, n in sorted(non.items(), key=lambda kv: -kv[1]))
+    mech = "safeguard refusal" if rec["mechanism"] == "refusal" else "overload fallback, inferred"
+    what = {"fable-lead:adjudicator": "treat an adjudicator verdict as unadjudicated",
+            "fable-lead:synthesizer": "treat a synthesis as unreviewed"}.get(rec["agent_type"], "treat its output as not Fable-produced")
+    return (f"fable-lead: {clean(rec['label'], 80)} ({clean(rec['agent_id'], 40, r'[A-Za-z0-9_-]')}) was served by {served} ({mech}) — its result is NOT a Fable "
+            f"result: {what}, and re-run it when Fable is available.")
+
+
+def hook_context(fresh, sid):
+    lines = [hook_text(r) for r in fresh[:HOOK_MAX_LINES]]
+    if len(fresh) > HOOK_MAX_LINES:
+        lines.append(f"fable-lead: ...and {len(fresh) - HOOK_MAX_LINES} more; run fable-lead-fallback-check --session {sid}")
+    return "\n".join(lines)
+
+
+def public(rec):
+    return {k: v for k, v in rec.items() if not k.startswith("_")}
+
+
+def clean(s, n=60, allowed=None):
+    """A meta-/transcript-derived string made safe for model context: control characters stripped, cut to n chars."""
+    s = "".join(c for c in str(s) if c.isprintable() and (allowed is None or re.match(allowed, c)))
+    return s[:n]
+
+
+def load_state(sp):
+    """The per-session hook state, or a fresh one when it is missing, garbled, wrong-shaped or out of range.
+    A directory sitting on the state path is moved aside (a hook that runs on every tool call deletes nothing),
+    never left to block writes."""
+    if os.path.isdir(sp):
+        try:
+            os.rename(sp, "%s.broken-%d" % (sp, int(time.time())))
+        except OSError:
+            pass
+    st = load_json(sp)
+    ids = lambda k: set(x for x in st[k] if isinstance(x, str)) if isinstance(st.get(k), list) else set()
+    newest = st.get("newest")
+    ok = isinstance(newest, (int, float)) and not isinstance(newest, bool) and math.isfinite(newest) and 0 <= newest <= time.time() + 86400
+    return (float(newest) if ok else 0.0), ids("reported"), ids("pending")
+
+
+def lock(path, wait=1.0):
+    """Exclusive flock on path, retried for `wait` seconds; the fd, or None if someone else holds it."""
+    fd = os.open(path, os.O_CREAT | os.O_RDWR, 0o600)
+    end = time.monotonic() + wait
+    while True:
+        try:
+            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            return fd
+        except OSError:
+            if time.monotonic() >= end:
+                os.close(fd)
+                return None
+            time.sleep(0.01)
+
+
+def hook_main():
+    """Hook mode: any problem means silence. Never raises, never writes to stderr, always exit 0."""
+    try:
+        sys.stderr = open(os.devnull, "w")
+        inp = json.loads(sys.stdin.read())
+        sid = inp.get("session_id")
+        event = inp.get("hook_event_name")
+        if event not in HOOK_EVENTS or not isinstance(sid, str) or not re.fullmatch(r"[A-Za-z0-9._-]{1,128}", sid):
+            return 0
+        if inp.get("agent_id"):
+            return 0  # fired inside a subagent: only the main thread reports
+        tp = inp.get("transcript_path")
+        sub = os.path.splitext(tp)[0] + "/subagents" if isinstance(tp, str) and tp else ""
+        if not os.path.isdir(sub):
+            dirs = subagent_dirs(sid)
+            sub = next((d for d in dirs if os.path.basename(os.path.dirname(d)) == sid), "")
+        if not sub:
+            return 0
+        sp = os.path.expanduser(f"~/.claude/fable-lead/fallback-state/{sid}.json")
+        os.makedirs(os.path.dirname(sp), exist_ok=True)
+        fd = lock(sp[:-len(".json")] + ".lock")
+        if fd is None:
+            return 0  # another call holds the lock; the next hook call will report
+        try:
+            hook_locked(sub, sp, sid, event)
+        finally:
+            os.close(fd)  # closing the descriptor releases the flock
+    except BaseException:
+        pass
+    return 0
+
+
+def hook_locked(sub, sp, sid, event):
+    """read state -> decide -> write state -> emit, all under the session lock."""
+    prev, reported, pending = load_state(sp)
+    files = list(walk(sub))
+    if not files:
+        return
+    newest = max(mt for _, mt in files)
+    if newest == prev and not pending:
+        return  # fast path: nothing was written since the last check and nothing is waiting to settle
+    now = time.time()
+    fresh, still = [], set()
+
+    def want(meta, mt):
+        aid = os.path.basename(meta)[:-len(".meta.json")]
+        aid = aid[len("agent-"):] if aid.startswith("agent-") else aid
+        return (mt > prev or aid in pending) and (sid + "/" + aid) not in reported
+
+    for rec in find_flagged([sub], skip=want):
+        if rec["finished"] or now - rec["_mtime"] >= SETTLE_S:
+            fresh.append(rec)
+        else:
+            still.add(rec["agent_id"])
+    reported |= {key(r) for r in fresh}
+    write_json_atomic(sp, {"newest": newest, "reported": sorted(reported), "pending": sorted(still)})
+    if fresh:
+        sys.stdout.write(json.dumps({"hookSpecificOutput": {"hookEventName": event,
+                         "additionalContext": hook_context(fresh, sid)}}))
+        sys.stdout.flush()
+
+
+def main():
+    if "--hook" in sys.argv[1:]:
+        return hook_main()
+    ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    ap.add_argument("--session", help="session id (a prefix is enough)")
+    ap.add_argument("--since", help="ISO date or datetime; only agents whose first non-Fable turn is at or after it")
+    ap.add_argument("--days", type=int, default=7, help="default 7; ignored when --since is given")
+    ap.add_argument("--json", action="store_true")
+    ap.add_argument("--unreported", metavar="STATEFILE", help="report only agents not listed in STATEFILE, then add them")
+    ap.add_argument("--hook", action="store_true", help="Claude Code hook mode (JSON on stdin)")
+    a = ap.parse_args()
+    if a.since:
+        since = parse_ts(a.since)
+        if since is None:
+            ap.error(f"--since: not an ISO date/time: {a.since}")
+    else:
+        since = time.time() - a.days * 86400
+    recs = []
+    for r in find_flagged(subagent_dirs(a.session), since=since - 1):  # transcript mtime >= first-turn time, so this only prunes
+        t = parse_ts(r["first_non_fable_ts"]) if r["first_non_fable_ts"] else None
+        if t is None or t >= since:
+            recs.append(r)
+    recs.sort(key=lambda r: (r["first_non_fable_ts"] or "", r["agent_id"]))
+    if a.unreported:
+        st = load_json(a.unreported)
+        seen = set(x for x in st.get("reported", []) if isinstance(x, str)) if isinstance(st.get("reported"), list) else set()
+        recs = [r for r in recs if key(r) not in seen]
+        if recs:
+            try:
+                write_json_atomic(a.unreported, {"reported": sorted(seen | {key(r) for r in recs})})
+            except OSError:
+                pass
+    if a.json:
+        print(json.dumps([public(r) for r in recs], indent=1))
+    elif recs:
+        for r in recs:
+            print(line_for(r))
+        print(f"{len(recs)} Fable-pinned agents served by a fallback model — {POLICY}")
+    return 0
+
+
+if __name__ == "__main__":
+    try:
+        sys.exit(main())
+    except BrokenPipeError:
+        sys.exit(0)
